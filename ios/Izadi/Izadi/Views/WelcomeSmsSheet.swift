@@ -8,53 +8,36 @@ struct WelcomeSmsSheet: View {
     @Environment(\.dismiss) private var dismiss
     @State private var firstName = ""
     @State private var mobile = ""
-    @State private var editableTemplate: String
+    @State private var currentTemplate: String
+    @State private var showTemplateEditor = false
     @State private var showComposer = false
     @State private var validationMessage: String?
 
     init(template: String, onTemplateChange: @escaping (String) -> Void) {
         self.template = template
         self.onTemplateChange = onTemplateChange
-        _editableTemplate = State(initialValue: template)
+        _currentTemplate = State(initialValue: template)
     }
 
     var body: some View {
         SoftScreenBackground(fullMint: true) {
             VStack(alignment: .leading, spacing: 16) {
                 HStack {
-                    Text("Welcome SMS")
+                    Text("Send welcome SMS")
                         .font(.izadi(.title))
                         .foregroundStyle(IzadiColor.ink)
                     Spacer()
-                    Button("Done") {
-                        onTemplateChange(editableTemplate)
-                        dismiss()
-                    }
-                    .font(.izadi(.bodyMedium))
-                    .foregroundStyle(IzadiColor.sage)
+                    Button("Cancel") { dismiss() }
+                        .font(.izadi(.bodyMedium))
+                        .foregroundStyle(IzadiColor.inkSoft)
                 }
 
-                Text("Opens Messages with your template. Nothing is sent until you tap Send.")
+                Text("Enter their details and we’ll open Messages with the welcome note ready to send.")
                     .font(.izadi(.body))
                     .foregroundStyle(IzadiColor.inkSoft)
 
                 FoamField(title: "First name", text: $firstName, autocapitalization: .words)
                 FoamField(title: "Mobile", text: $mobile, keyboard: .phonePad)
-
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("TEMPLATE")
-                        .font(.izadi(.label))
-                        .tracking(2.2)
-                        .foregroundStyle(IzadiColor.sageSoft)
-                    TextEditor(text: $editableTemplate)
-                        .font(.izadi(.bodyMedium))
-                        .foregroundStyle(IzadiColor.ink)
-                        .scrollContentBackground(.hidden)
-                        .frame(minHeight: 160)
-                        .padding(12)
-                        .background(IzadiColor.foam)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                }
 
                 if let validationMessage {
                     Text(validationMessage)
@@ -62,8 +45,7 @@ struct WelcomeSmsSheet: View {
                         .foregroundStyle(IzadiColor.roseDeep)
                 }
 
-                PrimaryButton(title: "Open Messages") {
-                    onTemplateChange(editableTemplate)
+                PrimaryButton(title: "Open SMS") {
                     guard !firstName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
                         validationMessage = "Add a first name."
                         return
@@ -76,19 +58,92 @@ struct WelcomeSmsSheet: View {
                     if MFMessageComposeViewController.canSendText() {
                         showComposer = true
                     } else {
-                        validationMessage = "Messaging isn’t available on this device."
+                        // Simulator often can’t send SMS — still allow preview path messaging.
+                        validationMessage = "Messaging isn’t available on this device (try a real iPhone)."
                     }
                 }
+
+                Button {
+                    showTemplateEditor = true
+                } label: {
+                    Text("Edit template")
+                        .font(.izadi(.boldBody))
+                        .foregroundStyle(IzadiColor.ink)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(IzadiColor.foam)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                }
+                .buttonStyle(.plain)
 
                 Spacer()
             }
             .padding(24)
         }
+        .sheet(isPresented: $showTemplateEditor) {
+            WelcomeSmsTemplateEditor(
+                template: currentTemplate,
+                onCancel: { showTemplateEditor = false },
+                onSave: { updated in
+                    currentTemplate = updated
+                    onTemplateChange(updated)
+                    showTemplateEditor = false
+                }
+            )
+        }
         .sheet(isPresented: $showComposer) {
             MessageComposeView(
                 recipients: [mobile],
-                body: WelcomeSms.render(template: editableTemplate, firstName: firstName)
+                body: WelcomeSms.render(template: currentTemplate, firstName: firstName)
             )
+        }
+    }
+}
+
+private struct WelcomeSmsTemplateEditor: View {
+    @State private var draft: String
+    let onCancel: () -> Void
+    let onSave: (String) -> Void
+
+    init(template: String, onCancel: @escaping () -> Void, onSave: @escaping (String) -> Void) {
+        _draft = State(initialValue: template)
+        self.onCancel = onCancel
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        SoftScreenBackground(fullMint: true) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Text("Edit welcome template")
+                        .font(.izadi(.title))
+                        .foregroundStyle(IzadiColor.ink)
+                    Spacer()
+                    Button("Cancel", action: onCancel)
+                        .font(.izadi(.bodyMedium))
+                        .foregroundStyle(IzadiColor.inkSoft)
+                }
+
+                Text("Use \(WelcomeSms.firstNameToken) where their first name should appear.")
+                    .font(.izadi(.body))
+                    .foregroundStyle(IzadiColor.inkSoft)
+
+                TextEditor(text: $draft)
+                    .font(.izadi(.bodyMedium))
+                    .foregroundStyle(IzadiColor.ink)
+                    .scrollContentBackground(.hidden)
+                    .frame(minHeight: 220)
+                    .padding(12)
+                    .background(IzadiColor.foam)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+
+                PrimaryButton(title: "Save template") {
+                    onSave(draft)
+                }
+
+                Spacer()
+            }
+            .padding(24)
         }
     }
 }
