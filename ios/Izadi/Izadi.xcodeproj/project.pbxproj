@@ -44,7 +44,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		BAADB19A3E75491FB1AFEEAC /* Izadi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Izadi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAADB19A3E75491FB1AFEEAC /* Izadi Counselling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Izadi Counselling.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0AA2FA4D55F424495A4B4AB /* IzadiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IzadiApp.swift; sourceTree = "<group>"; };
 		87656E37F92E40BFAC0787E9 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		E8358FE5A65842FDB5B00B0C /* DailyQuotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuotes.swift; sourceTree = "<group>"; };
@@ -104,7 +104,7 @@
 		11951BC6573242C2A4C6B80E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				BAADB19A3E75491FB1AFEEAC /* Izadi.app */,
+				BAADB19A3E75491FB1AFEEAC /* Izadi Counselling.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -217,8 +217,8 @@
 				FD67CC07853444A6951B9A0F /* FirebaseAuth */,
 				DCACA48070CE494BBD3AE695 /* FirebaseFirestore */,
 			);
-			productName = Izadi;
-			productReference = BAADB19A3E75491FB1AFEEAC /* Izadi.app */;
+			productName = "Izadi Counselling";
+			productReference = BAADB19A3E75491FB1AFEEAC /* Izadi Counselling.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -351,7 +351,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.turtletech.izadicounselling;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Izadi Counselling";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -373,7 +373,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.turtletech.izadicounselling;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Izadi Counselling";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
