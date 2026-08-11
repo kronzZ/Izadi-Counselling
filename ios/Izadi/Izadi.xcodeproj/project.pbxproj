@@ -36,6 +36,7 @@
 		A7E6099CFDC041ECBFF01655 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FD67CC07853444A6951B9A0F /* FirebaseAuth */; };
 		2E58C63D05C74348BFAF0058 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = DCACA48070CE494BBD3AE695 /* FirebaseFirestore */; };
 		01132961CD064335A24CBC96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 873336089F754179B9F1EE9D /* GoogleService-Info.plist */; };
+		572AC062675B4284BAEF4FF2 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15860CD5163B4619B301F7E6 /* AuthView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -68,6 +69,7 @@
 		869FB681683D4074B2E9EF60 /* Outfit-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Outfit-Light.ttf; sourceTree = "<group>"; };
 		CA1182A35CA84AE58A94136F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		873336089F754179B9F1EE9D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		15860CD5163B4619B301F7E6 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,6 +149,7 @@
 		92B2A59DECB14A6393D65E09 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				15860CD5163B4619B301F7E6 /* AuthView.swift */,
 				AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */,
 				97F922B8A4384D6EAC45361A /* ClientDetailView.swift */,
 				C534AAA49EB646E39BE27647 /* ClientSessionsView.swift */,
@@ -257,6 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				572AC062675B4284BAEF4FF2 /* AuthView.swift in Sources */,
 				DA11049BA31E4194AA3162FA /* IzadiApp.swift in Sources */,
 				C325C278B69448F4BC38AA0C /* Client.swift in Sources */,
 				601DA34E156F49FFA3F05F5F /* DailyQuotes.swift in Sources */,

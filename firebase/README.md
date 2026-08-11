@@ -1,17 +1,17 @@
 # Firebase setup — Izadi (iOS only)
 
-Cloud backend for the iOS app. One counselor uses the app — there is **no login screen**.
-The app signs in anonymously in the background; practice data lives under that Auth UID in Firestore.
+Cloud backend for the iOS app. One counselor uses a **practice email/password**.
+That login survives delete/reinstall — she signs in again and gets the same Firestore data.
 
 ## Quick path
 
 1. Create Firebase project  
 2. Enable Firestore  
-3. Enable **Anonymous** auth  
+3. Enable **Email/Password** auth  
 4. Register the iOS app (`com.practice.app`)  
 5. Drop in `GoogleService-Info.plist`  
 6. Deploy security rules  
-7. Run from Xcode — opens straight to Home  
+7. Run from Xcode → create the practice login once → stays signed in  
 
 Detailed steps below.
 
@@ -34,13 +34,14 @@ Detailed steps below.
 
 You’ll see an empty database. That’s expected — the app creates documents when it first launches and when you add clients/sessions.
 
-## 3. Enable Anonymous auth
+## 3. Enable Email/Password auth
 
 1. **Build → Authentication → Get started** (or search “Authentication”).
-2. **Sign-in method** tab → **Anonymous** → Enable → Save.
-3. Leave Email/Password off — you don’t need it.
+2. **Sign-in method** tab → **Email/Password** → Enable → Save.
+3. You can leave Anonymous off.
 
-You do **not** create a user manually in the console.
+Create the practice login **once** in the app (or add a user under Authentication → Users).
+After that she only signs in again if she deletes the app or signs out.
 
 ## 4. Register the iOS app
 
@@ -83,9 +84,10 @@ That deploys:
 2. Wait for SPM to finish resolving Firebase.
 3. Set your **Development Team** for signing.
 4. Run on simulator or device.
-5. App should land on **Home** with no sign-in screen.
+5. First launch: **Create practice login** with her email + a password you’ll both remember.
+6. Later launches: she stays signed in automatically. After delete/reinstall: **Sign in** with the same email/password.
 
-On first launch the app creates:
+On first sign-in the app creates:
 
 ```
 practices/{uid}                    # settings + welcome SMS template
@@ -104,7 +106,7 @@ practices/{uid}/sessions/{sessionId}
 2. Firebase Console → **Firestore** → `practices` → your UID → `clients`.
 3. You should see the document.
 
-If the app shows “Couldn’t start” mentioning Anonymous, go back to step 3 and enable Anonymous auth.
+If sign-in fails, confirm Email/Password is enabled (step 3).
 
 If you see permission errors, rules weren’t deployed (step 5).
 
@@ -125,9 +127,9 @@ practices/{uid}/sessions/{sessionId}
   paymentAmountCents, paymentMethod, updatedAt
 ```
 
-`uid` is the anonymous Auth user id for that install. Rules enforce `request.auth.uid == practiceId`.
+`uid` is Firebase Auth’s user id for the practice email. Rules enforce `request.auth.uid == practiceId`.
 
-**Note:** Deleting the app (or resetting the simulator) creates a new anonymous user and an empty practice. For your friend’s real phone, avoid deleting the app if you care about keeping that cloud data linked.
+Delete/reinstall is fine: sign in with the same email/password and the same `practices/{uid}` data comes back.
 
 ## Optional: Square later
 
