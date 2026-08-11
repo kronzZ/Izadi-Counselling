@@ -43,23 +43,17 @@ struct IzadiApp: App {
                                 .tint(IzadiColor.sage)
                         }
                     } else if auth.isSignedIn {
-                        HomeView()
-                            .environmentObject(store)
-                            .environmentObject(SquarePaymentCoordinator.shared)
-                            .environmentObject(appLock)
-                            .onAppear {
-                                if let uid = auth.uid {
-                                    store.start(uid: uid)
-                                }
-                            }
-                            .onChange(of: auth.uid) { _, uid in
-                                if let uid {
-                                    store.start(uid: uid)
-                                } else {
-                                    store.stop()
-                                }
-                            }
-                            .allowsHitTesting(appLock.isUnlocked && !appLock.isPrivacyCovered)
+                        // Important: only mount HomeView after biometrics succeeds.
+                        // This avoids HomeView's hero animation from starting "under" the
+                        // lock screen and then jumping when the lock disappears.
+                        if appLock.isUnlocked {
+                            HomeView()
+                                .environmentObject(store)
+                                .environmentObject(SquarePaymentCoordinator.shared)
+                                .environmentObject(appLock)
+                        } else {
+                            SoftScreenBackground(fullMint: true)
+                        }
                     } else {
                         AuthView()
                             .environmentObject(auth)
@@ -86,6 +80,18 @@ struct IzadiApp: App {
             .onChange(of: scenePhase) { _, phase in
                 guard !showSplash else { return }
                 appLock.handleScenePhase(phase, isSignedIn: auth.isSignedIn)
+            }
+            .onAppear {
+                if let uid = auth.uid {
+                    store.start(uid: uid)
+                }
+            }
+            .onChange(of: auth.uid) { _, uid in
+                if let uid {
+                    store.start(uid: uid)
+                } else {
+                    store.stop()
+                }
             }
             .onChange(of: auth.isSignedIn) { _, signedIn in
                 if signedIn {
