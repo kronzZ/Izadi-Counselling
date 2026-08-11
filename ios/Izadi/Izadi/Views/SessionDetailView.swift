@@ -118,6 +118,15 @@ struct SessionDetailView: View {
             completeSheet
                 .presentationDetents([.medium])
         }
+        .alert("Delete this payment?", isPresented: $showDeletePaymentConfirm) {
+            Button("Delete", role: .destructive) {
+                store.deleteSession(sessionId: draft.id)
+                path.removeLast()
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("All data for this payment record will be lost, including the session details. This can’t be undone.")
+        }
         .onChange(of: store.sessions) { _, sessions in
             if let latest = sessions.first(where: { $0.id == draft.id }) {
                 draft = latest
