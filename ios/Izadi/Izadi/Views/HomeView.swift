@@ -52,8 +52,8 @@ struct HomeView: View {
                         }
 
                         Text(DailyQuotes.today())
-                            .font(.izadi(.body))
-                            .italic()
+                            // Outfit has no italic face — .italic() on .izadi() is a no-op.
+                            .font(.system(size: 17, weight: .regular, design: .default).italic())
                             .foregroundStyle(IzadiColor.inkSoft)
                             .padding(.trailing, 48)
                             .fixedSize(horizontal: false, vertical: true)
