@@ -30,15 +30,6 @@ struct HomeView: View {
                                     .font(.izadi(.title))
                                     .foregroundStyle(IzadiColor.sage)
                                     .tracking(0.4)
-
-                                Button("Sign out") {
-                                    store.stop()
-                                    auth.signOut()
-                                }
-                                .font(.izadi(.label))
-                                .foregroundStyle(IzadiColor.inkSoft)
-                                .buttonStyle(.plain)
-                                .padding(.top, 2)
                             }
                             .frame(maxWidth: .infinity, alignment: .leading)
 

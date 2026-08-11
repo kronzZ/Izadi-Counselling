@@ -33,7 +33,6 @@ struct IzadiApp: App {
                         }
                     } else if auth.isSignedIn {
                         HomeView()
-                            .environmentObject(auth)
                             .environmentObject(store)
                             .onAppear {
                                 if let uid = auth.uid {
