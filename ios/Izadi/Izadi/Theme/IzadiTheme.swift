@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 enum IzadiColor {
     static let ink = Color(red: 0x2E / 255, green: 0x3C / 255, blue: 0x3A / 255)
@@ -49,26 +50,49 @@ struct SoftScreenBackground<Content: View>: View {
 }
 
 extension Font {
+    /// PostScript names inside the bundled TTFs are OutfitThin-*, not Outfit-*.
     static func izadi(_ style: IzadiFontStyle) -> Font {
+        let size: CGFloat
+        let postScript: String
+        let weight: Font.Weight
+
         switch style {
         case .display:
-            return .custom("Outfit-Light", size: 46, relativeTo: .largeTitle)
+            size = 46; postScript = "OutfitThin-Light"; weight = .light
         case .title:
-            return .custom("Outfit-Light", size: 28, relativeTo: .title)
+            size = 28; postScript = "OutfitThin-Light"; weight = .light
         case .titleMedium:
-            return .custom("Outfit-Light", size: 20, relativeTo: .title2)
+            size = 20; postScript = "OutfitThin-Light"; weight = .light
         case .body:
-            return .custom("Outfit-Light", size: 17, relativeTo: .body)
+            size = 17; postScript = "OutfitThin-Light"; weight = .light
         case .bodyMedium:
-            return .custom("Outfit-Light", size: 15, relativeTo: .callout)
+            size = 15; postScript = "OutfitThin-Light"; weight = .light
         case .label:
-            return .custom("Outfit-Light", size: 13, relativeTo: .caption)
+            size = 13; postScript = "OutfitThin-Light"; weight = .light
         case .boldBody:
-            return .custom("Outfit-Bold", size: 17, relativeTo: .body)
+            size = 17; postScript = "OutfitThin-Bold"; weight = .bold
         }
+
+        if UIFont(name: postScript, size: size) != nil {
+            return .custom(postScript, size: size, relativeTo: style.textStyle)
+        }
+        // Fallback so the UI never goes blank if the font fails to load.
+        return .system(size: size, weight: weight, design: .default)
     }
 }
 
 enum IzadiFontStyle {
     case display, title, titleMedium, body, bodyMedium, label, boldBody
+
+    var textStyle: Font.TextStyle {
+        switch self {
+        case .display: return .largeTitle
+        case .title: return .title
+        case .titleMedium: return .title2
+        case .body: return .body
+        case .bodyMedium: return .callout
+        case .label: return .caption
+        case .boldBody: return .body
+        }
+    }
 }

@@ -54,4 +54,9 @@ final class AuthService: ObservableObject {
             errorMessage = error.localizedDescription
         }
     }
+
+    /// Safety valve if the Auth listener is delayed (offline / bad config).
+    func markConfigured() {
+        isConfiguring = false
+    }
 }
