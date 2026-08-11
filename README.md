@@ -1,49 +1,30 @@
-# Izadi Counselling
+# Izadi Counselling (iOS)
 
 Practice manager for **Izadi Counselling** — clients, bookings, wrap-up payments, and welcome SMS.
 
-| Platform | Path | Storage |
-|----------|------|---------|
-| Android | [`android/`](android/) | Firebase Auth + Firestore (with one-time import from old on-device JSON) |
-| iOS | [`ios/Izadi/`](ios/Izadi/) | Same Firebase project |
-| Backend | [`firebase/`](firebase/) | Security rules + indexes |
+The iOS app is the product. Backend is **Firebase Auth + Cloud Firestore**.
 
-## What you need to do once (Firebase + Xcode)
+| | Path |
+|--|------|
+| iOS (Xcode) | [`ios/Izadi/`](ios/Izadi/) |
+| Firebase rules & indexes | [`firebase/`](firebase/) |
 
-### 1. Firebase project
-Follow [`firebase/README.md`](firebase/README.md):
+> The `android/` folder is leftover from early prototyping and is not part of the product path.
 
-1. Create the project, enable **Firestore** and **Email/Password** auth.
-2. Register Android (`com.practice.app`) and iOS (`com.practice.app`).
-3. Download configs and **replace the placeholders**:
-   - `android/app/google-services.json`
-   - `ios/Izadi/Izadi/GoogleService-Info.plist`
-4. Deploy rules: `cd firebase && firebase deploy --only firestore`
+## Setup
 
-### 2. iOS in Xcode
-1. Open `ios/Izadi/Izadi.xcodeproj`
-2. Let SPM fetch Firebase
-3. Set your signing team
-4. Run
+1. Follow **[`firebase/README.md`](firebase/README.md)** end-to-end (project → Firestore → Auth → iOS app → deploy rules).
+2. Replace `ios/Izadi/Izadi/GoogleService-Info.plist` with the file from the Firebase console.
+3. Open `ios/Izadi/Izadi.xcodeproj` → set signing team → run.
+4. Create your account in the app.
 
-### 3. Android
-1. Sync Gradle with the real `google-services.json`
-2. Run on device/emulator
-3. Sign in with the **same** email as iOS
-4. If the phone still has old local data, accept the **Import to cloud** prompt
+## Sync model
 
-## Shared data model
-
-Everything for a counselor lives under their Auth UID:
+Your practice data is keyed to your Auth UID:
 
 ```
-practices/{uid}
-practices/{uid}/clients/{clientId}
-practices/{uid}/sessions/{sessionId}
+practices/{uid}/clients/…
+practices/{uid}/sessions/…
 ```
 
-Both apps listen in real time — book on iPhone, see it on Android (and the reverse).
-
-## Square payments
-
-Cash wrap-up works offline. Tap-to-pay still uses Square Point of Sale on device (same Application ID as before). Register the iOS bundle ID in the Square Developer Dashboard alongside the Android package.
+Sign in on another iPhone/iPad with the same email and you get the same live data.
