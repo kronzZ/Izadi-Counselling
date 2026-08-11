@@ -31,7 +31,25 @@ struct IzadiApp: App {
                             ProgressView()
                                 .tint(IzadiColor.sage)
                         }
-                    } else if auth.isSignedIn {
+                    } else if let error = auth.errorMessage, !auth.isSignedIn {
+                        SoftScreenBackground {
+                            VStack(alignment: .leading, spacing: 16) {
+                                Text("Couldn’t start")
+                                    .font(.izadi(.title))
+                                    .foregroundStyle(IzadiColor.ink)
+                                Text(error)
+                                    .font(.izadi(.body))
+                                    .foregroundStyle(IzadiColor.roseDeep)
+                                Text("In Firebase Console → Authentication → Sign-in method, turn on Anonymous, then run again.")
+                                    .font(.izadi(.bodyMedium))
+                                    .foregroundStyle(IzadiColor.inkSoft)
+                                PrimaryButton(title: "Try again") {
+                                    Task { await auth.ensureSignedIn() }
+                                }
+                            }
+                            .padding(28)
+                        }
+                    } else {
                         HomeView()
                             .environmentObject(auth)
                             .environmentObject(store)
@@ -47,9 +65,6 @@ struct IzadiApp: App {
                                     store.stop()
                                 }
                             }
-                    } else {
-                        AuthView()
-                            .environmentObject(auth)
                     }
                 }
 
@@ -60,7 +75,6 @@ struct IzadiApp: App {
                 }
             }
             .task {
-                // Don't hang forever if Auth is slow/offline.
                 try? await Task.sleep(nanoseconds: 2_000_000_000)
                 if auth.isConfiguring {
                     auth.markConfigured()

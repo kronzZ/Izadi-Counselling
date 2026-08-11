@@ -45,19 +45,6 @@ struct HomeView: View {
                     onTemplateChange: store.updateWelcomeSmsTemplate
                 )
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button("Sign out", role: .destructive) {
-                            store.stop()
-                            auth.signOut()
-                        }
-                    } label: {
-                        Image(systemName: "person.crop.circle")
-                            .foregroundStyle(IzadiColor.sage)
-                    }
-                }
-            }
         }
         .onAppear {
             withAnimation(.easeOut(duration: 0.6)) { showHero = true }

@@ -14,8 +14,14 @@ final class AuthService: ObservableObject {
         handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
             Task { @MainActor in
                 self?.user = user
-                self?.isConfiguring = false
+                if user != nil {
+                    self?.isConfiguring = false
+                }
             }
+        }
+
+        Task {
+            await ensureSignedIn()
         }
     }
 
@@ -28,34 +34,22 @@ final class AuthService: ObservableObject {
     var uid: String? { user?.uid }
     var isSignedIn: Bool { user != nil }
 
-    func signIn(email: String, password: String) async {
+    /// Single-user app: sign in anonymously with no email/password UI.
+    func ensureSignedIn() async {
         errorMessage = nil
+        if Auth.auth().currentUser != nil {
+            isConfiguring = false
+            return
+        }
         do {
-            _ = try await Auth.auth().signIn(withEmail: email.trimmingCharacters(in: .whitespacesAndNewlines), password: password)
+            _ = try await Auth.auth().signInAnonymously()
+            isConfiguring = false
         } catch {
             errorMessage = error.localizedDescription
+            isConfiguring = false
         }
     }
 
-    func signUp(email: String, password: String) async {
-        errorMessage = nil
-        do {
-            _ = try await Auth.auth().createUser(withEmail: email.trimmingCharacters(in: .whitespacesAndNewlines), password: password)
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    func signOut() {
-        errorMessage = nil
-        do {
-            try Auth.auth().signOut()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
-    }
-
-    /// Safety valve if the Auth listener is delayed (offline / bad config).
     func markConfigured() {
         isConfiguring = false
     }
