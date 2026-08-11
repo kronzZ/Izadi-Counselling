@@ -58,15 +58,18 @@ struct ClientDetailView: View {
                             path.append(AppRoute.clientSessions(draft.id))
                         }
 
-                        Button(role: .destructive) {
+                        Button {
                             showDeleteConfirm = true
                         } label: {
                             Text("Delete client")
-                                .font(.izadi(.bodyMedium))
-                                .foregroundStyle(IzadiColor.roseDeep)
+                                .font(.izadi(.boldBody))
+                                .foregroundStyle(.white)
                                 .frame(maxWidth: .infinity)
-                                .padding(.vertical, 14)
+                                .padding(.vertical, 16)
+                                .background(IzadiColor.roseDeep)
+                                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                         }
+                        .buttonStyle(.plain)
                     }
                     .padding(.horizontal, 24)
                     .padding(.bottom, 36)
@@ -85,7 +88,7 @@ struct ClientDetailView: View {
             }
             Button("Cancel", role: .cancel) {}
         } message: {
-            Text("Their sessions will be removed from the practice as well.")
+            Text("All data for this client will be lost, including their sessions and payment history. This can’t be undone.")
         }
     }
 
