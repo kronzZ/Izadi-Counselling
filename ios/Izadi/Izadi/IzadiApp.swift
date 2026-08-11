@@ -51,7 +51,6 @@ struct IzadiApp: App {
                         }
                     } else {
                         HomeView()
-                            .environmentObject(auth)
                             .environmentObject(store)
                             .onAppear {
                                 if let uid = auth.uid {
