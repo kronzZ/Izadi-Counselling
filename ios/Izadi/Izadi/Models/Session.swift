@@ -112,7 +112,6 @@ struct Session: Identifiable, Equatable, Hashable {
 }
 
 enum SessionQueries {
-    static let estimatedSessionFeeDollars = 130
     static let durationOptions = [30, 45, 50, 60, 90]
 
     static func upcoming(_ sessions: [Session], limit: Int = 5) -> [Session] {
@@ -139,20 +138,10 @@ enum SessionQueries {
         sessions.filter { isPast($0) }.sorted { $0.startsAt > $1.startsAt }
     }
 
-    static func upcomingPayments(_ sessions: [Session]) -> [Session] {
-        sessions
-            .filter { $0.status != .cancelled && $0.paymentStatus == .pending }
-            .sorted { $0.startsAt < $1.startsAt }
-    }
-
     static func paidPayments(_ sessions: [Session]) -> [Session] {
         sessions
             .filter { $0.status != .cancelled && $0.paymentStatus == .paid }
             .sorted { $0.startsAt > $1.startsAt }
-    }
-
-    static func estimatedUpcomingRevenueDollars(count: Int) -> Int {
-        count * estimatedSessionFeeDollars
     }
 
     static func collectedPaymentsCents(_ paid: [Session]) -> Int {

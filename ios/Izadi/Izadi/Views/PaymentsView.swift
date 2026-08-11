@@ -4,7 +4,9 @@ struct PaymentsView: View {
     @EnvironmentObject private var store: PracticeStore
     @Binding var path: NavigationPath
 
-    @State private var tab = 0
+    private var paid: [Session] {
+        SessionQueries.paidPayments(store.sessions)
+    }
 
     var body: some View {
         SoftScreenBackground {
@@ -17,35 +19,19 @@ struct PaymentsView: View {
                         .font(.izadi(.title))
                         .foregroundStyle(IzadiColor.ink)
 
-                    SegmentedTabs(tabs: ["Upcoming", "Paid"], selected: $tab)
-
-                    let upcoming = SessionQueries.upcomingPayments(store.sessions)
-                    let paid = SessionQueries.paidPayments(store.sessions)
-
-                    Group {
-                        if tab == 0 {
-                            Text("Estimated · \(MoneyFormatting.formatAud(cents: SessionQueries.estimatedUpcomingRevenueDollars(count: upcoming.count) * 100))")
-                                .font(.izadi(.bodyMedium))
-                                .foregroundStyle(IzadiColor.inkSoft)
-                        } else {
-                            Text("Collected · \(MoneyFormatting.formatAud(cents: SessionQueries.collectedPaymentsCents(paid)))")
-                                .font(.izadi(.bodyMedium))
-                                .foregroundStyle(IzadiColor.inkSoft)
-                        }
-                    }
+                    Text("Collected · \(MoneyFormatting.formatAud(cents: SessionQueries.collectedPaymentsCents(paid)))")
+                        .font(.izadi(.bodyMedium))
+                        .foregroundStyle(IzadiColor.inkSoft)
 
                     ScrollView {
                         LazyVStack(spacing: 10) {
-                            let list = tab == 0 ? upcoming : paid
-                            if list.isEmpty {
+                            if paid.isEmpty {
                                 EmptyStateText(
-                                    title: tab == 0 ? "No pending payments" : "No payments collected yet",
-                                    subtitle: tab == 0
-                                        ? "Booked sessions waiting for wrap-up appear here."
-                                        : "Completed paid sessions appear here."
+                                    title: "No payments collected yet",
+                                    subtitle: "Completed paid sessions appear here."
                                 )
                             } else {
-                                ForEach(list) { session in
+                                ForEach(paid) { session in
                                     Button {
                                         path.append(AppRoute.sessionDetail(session.id))
                                     } label: {
@@ -57,7 +43,7 @@ struct PaymentsView: View {
                                                 Text(session.shortDate)
                                                     .font(.izadi(.bodyMedium))
                                                     .foregroundStyle(IzadiColor.inkSoft)
-                                                if tab == 1, let summary = session.formattedPaidSummary {
+                                                if let summary = session.formattedPaidSummary {
                                                     Text(summary)
                                                         .font(.izadi(.bodyMedium))
                                                         .foregroundStyle(IzadiColor.sage)
