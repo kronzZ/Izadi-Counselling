@@ -91,7 +91,7 @@ struct ClientDetailView: View {
 
     private var relationshipPicker: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("RELATIONSHIP")
+            Text("EMERGENCY CONTACT RELATIONSHIP")
                 .font(.izadi(.label))
                 .tracking(2.2)
                 .foregroundStyle(IzadiColor.sageSoft)
