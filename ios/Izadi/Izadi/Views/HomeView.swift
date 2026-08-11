@@ -15,6 +15,17 @@ struct HomeView: View {
         NavigationStack(path: $path) {
             SoftScreenBackground {
                 VStack(alignment: .leading, spacing: 0) {
+                    if let error = store.errorMessage {
+                        Text(error)
+                            .font(.izadi(.bodyMedium))
+                            .foregroundStyle(IzadiColor.roseDeep)
+                            .padding(12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(IzadiColor.butter)
+                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                            .padding(.top, 12)
+                    }
+
                     // Hero: brand left, bird right — matches Android HomeScreen
                     VStack(alignment: .leading, spacing: 16) {
                         HStack(alignment: .center, spacing: 12) {

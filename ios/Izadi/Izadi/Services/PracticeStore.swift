@@ -71,8 +71,11 @@ final class PracticeStore: ObservableObject {
         Task {
             do {
                 try await repository.upsertClient(uid: uid, client: client)
+                errorMessage = nil
             } catch {
-                errorMessage = error.localizedDescription
+                clients.removeAll { $0.id == client.id }
+                highlightClientId = nil
+                errorMessage = "Couldn’t save client: \(error.localizedDescription)"
             }
         }
     }
