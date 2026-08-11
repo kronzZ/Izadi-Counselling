@@ -31,26 +31,9 @@ struct IzadiApp: App {
                             ProgressView()
                                 .tint(IzadiColor.sage)
                         }
-                    } else if let error = auth.errorMessage, !auth.isSignedIn {
-                        SoftScreenBackground {
-                            VStack(alignment: .leading, spacing: 16) {
-                                Text("Couldn’t start")
-                                    .font(.izadi(.title))
-                                    .foregroundStyle(IzadiColor.ink)
-                                Text(error)
-                                    .font(.izadi(.body))
-                                    .foregroundStyle(IzadiColor.roseDeep)
-                                Text("In Firebase Console → Authentication → Sign-in method, turn on Anonymous, then run again.")
-                                    .font(.izadi(.bodyMedium))
-                                    .foregroundStyle(IzadiColor.inkSoft)
-                                PrimaryButton(title: "Try again") {
-                                    Task { await auth.ensureSignedIn() }
-                                }
-                            }
-                            .padding(28)
-                        }
-                    } else {
+                    } else if auth.isSignedIn {
                         HomeView()
+                            .environmentObject(auth)
                             .environmentObject(store)
                             .onAppear {
                                 if let uid = auth.uid {
@@ -64,6 +47,9 @@ struct IzadiApp: App {
                                     store.stop()
                                 }
                             }
+                    } else {
+                        AuthView()
+                            .environmentObject(auth)
                     }
                 }
 

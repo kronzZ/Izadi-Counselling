@@ -3,6 +3,7 @@ import MessageUI
 
 struct HomeView: View {
     @EnvironmentObject private var store: PracticeStore
+    @EnvironmentObject private var auth: AuthService
 
     @State private var showHero = false
     @State private var showNav = false
@@ -43,6 +44,19 @@ struct HomeView: View {
                     template: store.welcomeSmsTemplate,
                     onTemplateChange: store.updateWelcomeSmsTemplate
                 )
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Sign out", role: .destructive) {
+                            store.stop()
+                            auth.signOut()
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .foregroundStyle(IzadiColor.sage)
+                    }
+                }
             }
         }
         .onAppear {

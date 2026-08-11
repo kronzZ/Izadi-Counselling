@@ -14,14 +14,8 @@ final class AuthService: ObservableObject {
         handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
             Task { @MainActor in
                 self?.user = user
-                if user != nil {
-                    self?.isConfiguring = false
-                }
+                self?.isConfiguring = false
             }
-        }
-
-        Task {
-            await ensureSignedIn()
         }
     }
 
@@ -34,19 +28,36 @@ final class AuthService: ObservableObject {
     var uid: String? { user?.uid }
     var isSignedIn: Bool { user != nil }
 
-    /// Single-user app: sign in anonymously with no email/password UI.
-    func ensureSignedIn() async {
+    func signIn(email: String, password: String) async {
         errorMessage = nil
-        if Auth.auth().currentUser != nil {
-            isConfiguring = false
-            return
-        }
         do {
-            _ = try await Auth.auth().signInAnonymously()
-            isConfiguring = false
+            _ = try await Auth.auth().signIn(
+                withEmail: email.trimmingCharacters(in: .whitespacesAndNewlines),
+                password: password
+            )
         } catch {
             errorMessage = error.localizedDescription
-            isConfiguring = false
+        }
+    }
+
+    func signUp(email: String, password: String) async {
+        errorMessage = nil
+        do {
+            _ = try await Auth.auth().createUser(
+                withEmail: email.trimmingCharacters(in: .whitespacesAndNewlines),
+                password: password
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func signOut() {
+        errorMessage = nil
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 
