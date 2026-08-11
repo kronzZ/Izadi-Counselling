@@ -58,7 +58,6 @@ struct WelcomeSmsSheet: View {
                     if MFMessageComposeViewController.canSendText() {
                         showComposer = true
                     } else {
-                        // Simulator often can’t send SMS — still allow preview path messaging.
                         validationMessage = "Messaging isn’t available on this device (try a real iPhone)."
                     }
                 }
@@ -75,11 +74,12 @@ struct WelcomeSmsSheet: View {
                         .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                 }
                 .buttonStyle(.plain)
-
-                Spacer()
             }
             .padding(24)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
         .sheet(isPresented: $showTemplateEditor) {
             WelcomeSmsTemplateEditor(
                 template: currentTemplate,
@@ -90,6 +90,8 @@ struct WelcomeSmsSheet: View {
                     showTemplateEditor = false
                 }
             )
+            .presentationDetents([.large])
+            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $showComposer) {
             MessageComposeView(
@@ -132,7 +134,7 @@ private struct WelcomeSmsTemplateEditor: View {
                     .font(.izadi(.bodyMedium))
                     .foregroundStyle(IzadiColor.ink)
                     .scrollContentBackground(.hidden)
-                    .frame(minHeight: 220)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(12)
                     .background(IzadiColor.foam)
                     .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
@@ -140,8 +142,6 @@ private struct WelcomeSmsTemplateEditor: View {
                 PrimaryButton(title: "Save template") {
                     onSave(draft)
                 }
-
-                Spacer()
             }
             .padding(24)
         }
