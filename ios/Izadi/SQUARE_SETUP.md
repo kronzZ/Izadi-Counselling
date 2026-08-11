@@ -12,7 +12,7 @@ Do this with the **business Square account** (your friend’s seller account):
    (or create a new app and put its Application ID into `ios/Izadi/Izadi/Services/SquareConfig.swift`)
 3. Left menu → **Point of Sale API**
 4. Under **iOS**, enter exactly:
-   - **Bundle ID:** `com.practice.app`
+   - **Bundle ID:** `com.turtletech.izadicounselling`
    - **URL Scheme:** `izadicounselling`
 5. Click **Save**
 6. **Credentials** tab → confirm the Application ID matches `SquareConfig.swift`

@@ -6,7 +6,7 @@ import Foundation
 /// 1. https://developer.squareup.com/apps → open your app (or create one)
 /// 2. Credentials → copy Application ID into `applicationId` below if different
 /// 3. Point of Sale API → iOS section:
-///    - Bundle ID: `com.practice.app`
+///    - Bundle ID: `com.turtletech.izadicounselling`
 ///    - URL Scheme: `izadicounselling`
 /// 4. Save
 enum SquareConfig {

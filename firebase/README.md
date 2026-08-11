@@ -8,7 +8,7 @@ That login survives delete/reinstall — she signs in again and gets the same Fi
 1. Create Firebase project  
 2. Enable Firestore  
 3. Enable **Email/Password** auth  
-4. Register the iOS app (`com.practice.app`)  
+4. Register the iOS app (`com.turtletech.izadicounselling`)  
 5. Drop in `GoogleService-Info.plist`  
 6. Deploy security rules  
 7. Run from Xcode → create the practice login once → stays signed in  
@@ -46,7 +46,7 @@ After that she only signs in again if she deletes the app or signs out.
 ## 4. Register the iOS app
 
 1. Project overview (gear) → **Project settings → Your apps → Add app → iOS**.
-2. **Apple bundle ID:** `com.practice.app`  
+2. **Apple bundle ID:** `com.turtletech.izadicounselling`  
    (must match Xcode → target → Signing & Capabilities / General).
 3. App nickname optional (e.g. `Izadi iOS`). App Store ID can stay blank for now.
 4. Download **`GoogleService-Info.plist`**.
@@ -133,4 +133,4 @@ Delete/reinstall is fine: sign in with the same email/password and the same `pra
 
 ## Optional: Square later
 
-Firestore does not take payments. Cash wrap-up is stored as session fields. For tap-to-pay, register bundle ID `com.practice.app` in the Square Developer Dashboard (same Application ID as in `SquareConfig.swift`).
+Firestore does not take payments. Cash wrap-up is stored as session fields. For tap-to-pay, register bundle ID `com.turtletech.izadicounselling` in the Square Developer Dashboard (same Application ID as in `SquareConfig.swift`).
