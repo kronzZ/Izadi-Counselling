@@ -17,7 +17,6 @@
 		780F8337B9DF48F6B61F8970 /* PracticeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8154D32BBDC04A6E83E21DA5 /* PracticeStore.swift */; };
 		2A7BD341FB2F436FA9035EDB /* SquareConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45755DE18DC49DF9473D480 /* SquareConfig.swift */; };
 		058A374C2AE844A384DBD0E1 /* IzadiTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068C8EB763047CA9785974F /* IzadiTheme.swift */; };
-		DEDFE58051BC456EA95EEA8E /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAC53690B54E45C0A9D6F821 /* AuthView.swift */; };
 		089A22211C89467588A08647 /* BookSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */; };
 		EF1C183F3A9A4C3C802CCA52 /* ClientDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97F922B8A4384D6EAC45361A /* ClientDetailView.swift */; };
 		0055F2249C624366B94F42F9 /* ClientSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C534AAA49EB646E39BE27647 /* ClientSessionsView.swift */; };
@@ -51,7 +50,6 @@
 		8154D32BBDC04A6E83E21DA5 /* PracticeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeStore.swift; sourceTree = "<group>"; };
 		F45755DE18DC49DF9473D480 /* SquareConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareConfig.swift; sourceTree = "<group>"; };
 		3068C8EB763047CA9785974F /* IzadiTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IzadiTheme.swift; sourceTree = "<group>"; };
-		AAC53690B54E45C0A9D6F821 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSessionView.swift; sourceTree = "<group>"; };
 		97F922B8A4384D6EAC45361A /* ClientDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDetailView.swift; sourceTree = "<group>"; };
 		C534AAA49EB646E39BE27647 /* ClientSessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSessionsView.swift; sourceTree = "<group>"; };
@@ -149,7 +147,6 @@
 		92B2A59DECB14A6393D65E09 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				AAC53690B54E45C0A9D6F821 /* AuthView.swift */,
 				AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */,
 				97F922B8A4384D6EAC45361A /* ClientDetailView.swift */,
 				C534AAA49EB646E39BE27647 /* ClientSessionsView.swift */,
@@ -270,7 +267,6 @@
 				780F8337B9DF48F6B61F8970 /* PracticeStore.swift in Sources */,
 				2A7BD341FB2F436FA9035EDB /* SquareConfig.swift in Sources */,
 				058A374C2AE844A384DBD0E1 /* IzadiTheme.swift in Sources */,
-				DEDFE58051BC456EA95EEA8E /* AuthView.swift in Sources */,
 				089A22211C89467588A08647 /* BookSessionView.swift in Sources */,
 				EF1C183F3A9A4C3C802CCA52 /* ClientDetailView.swift in Sources */,
 				0055F2249C624366B94F42F9 /* ClientSessionsView.swift in Sources */,
