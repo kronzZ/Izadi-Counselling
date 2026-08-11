@@ -33,7 +33,7 @@ struct ManageSessionsView: View {
                     SegmentedTabs(tabs: ["Upcoming", "Past"], selected: $tab)
 
                     ScrollView {
-                        LazyVStack(spacing: 10) {
+                        LazyVStack(spacing: 7) {
                             let list = tab == 0
                                 ? SessionQueries.manageUpcoming(store.sessions)
                                 : SessionQueries.managePast(store.sessions)

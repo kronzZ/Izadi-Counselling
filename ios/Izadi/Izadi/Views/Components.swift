@@ -103,28 +103,31 @@ struct SessionRowCard: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(alignment: .top, spacing: 14) {
-                VStack(alignment: .leading, spacing: 4) {
+            HStack(alignment: .center, spacing: 10) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(session.clientName)
-                        .font(.izadi(.titleMedium))
+                        .font(.izadi(.body))
                         .foregroundStyle(IzadiColor.ink)
                     Text("\(session.shortDate) · \(session.friendlyTime)")
-                        .font(.izadi(.bodyMedium))
+                        .font(.izadi(.label))
+                        .tracking(0)
                         .foregroundStyle(IzadiColor.inkSoft)
                     if awaitingWrapUp {
                         Text("Awaiting wrap-up")
                             .font(.izadi(.label))
-                            .tracking(1.4)
+                            .tracking(1.2)
                             .foregroundStyle(IzadiColor.roseDeep)
                     }
                 }
                 Spacer()
                 Image(systemName: "chevron.right")
+                    .font(.system(size: 12, weight: .semibold))
                     .foregroundStyle(IzadiColor.sageSoft)
             }
-            .padding(18)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
             .background(awaitingWrapUp ? IzadiColor.butter : IzadiColor.foam)
-            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
         .buttonStyle(.plain)
     }

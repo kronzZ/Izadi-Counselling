@@ -27,7 +27,7 @@ struct ClientSessionsView: View {
                     SegmentedTabs(tabs: ["Upcoming", "Past"], selected: $tab)
 
                     ScrollView {
-                        LazyVStack(spacing: 10) {
+                        LazyVStack(spacing: 7) {
                             let list = tab == 0 ? upcoming : past
                             if list.isEmpty {
                                 EmptyStateText(

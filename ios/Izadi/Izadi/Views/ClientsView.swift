@@ -54,7 +54,7 @@ struct ClientsView: View {
                     }
 
                     ScrollView {
-                        LazyVStack(spacing: 10) {
+                        LazyVStack(spacing: 7) {
                             ForEach(filteredClients) { client in
                                 Button {
                                     if pickerMode {
@@ -63,26 +63,29 @@ struct ClientsView: View {
                                         path.append(AppRoute.clientDetail(client.id))
                                     }
                                 } label: {
-                                    HStack {
-                                        VStack(alignment: .leading, spacing: 4) {
+                                    HStack(alignment: .center, spacing: 10) {
+                                        VStack(alignment: .leading, spacing: 2) {
                                             Text(client.fullName)
-                                                .font(.izadi(.titleMedium))
+                                                .font(.izadi(.body))
                                                 .foregroundStyle(IzadiColor.ink)
                                             Text(client.mobile.isEmpty ? "No mobile" : client.mobile)
-                                                .font(.izadi(.bodyMedium))
+                                                .font(.izadi(.label))
+                                                .tracking(0)
                                                 .foregroundStyle(IzadiColor.inkSoft)
                                         }
                                         Spacer()
                                         Image(systemName: "chevron.right")
+                                            .font(.system(size: 12, weight: .semibold))
                                             .foregroundStyle(IzadiColor.sageSoft)
                                     }
-                                    .padding(16)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 10)
                                     .background(
                                         store.highlightClientId == client.id
                                         ? IzadiColor.bloom
                                         : IzadiColor.foam
                                     )
-                                    .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                                 }
                                 .buttonStyle(.plain)
                                 .onAppear {
