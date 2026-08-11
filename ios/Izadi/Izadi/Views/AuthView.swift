@@ -70,6 +70,8 @@ struct AuthView: View {
                             .font(.izadi(.bodyMedium))
                             .foregroundStyle(IzadiColor.roseDeep)
                             .frame(maxWidth: .infinity, alignment: .leading)
+                            .multilineTextAlignment(.leading)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
 
                     PrimaryButton(

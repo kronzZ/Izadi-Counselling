@@ -1,5 +1,6 @@
 import Foundation
 import FirebaseAuth
+import FirebaseCore
 import Combine
 
 @MainActor
@@ -11,6 +12,18 @@ final class AuthService: ObservableObject {
     private var handle: AuthStateDidChangeListenerHandle?
 
     init() {
+        // If GoogleService-Info.plist is still placeholder values, Firebase Auth
+        // will fail at runtime with vague errors. Detect that early so we
+        // don't waste time debugging "internal error" messages.
+        if let options = FirebaseApp.app()?.options {
+            let apiKey = options.apiKey ?? ""
+            let projectId = options.projectID ?? ""
+            if apiKey.contains("REPLACE_WITH_FIREBASE_IOS_API_KEY")
+                || projectId.contains("placeholder") {
+                errorMessage = "Firebase is not configured for this build. Replace ios/Izadi/Izadi/GoogleService-Info.plist with the real file from Firebase for bundle ID com.turtletech.izadicounselling."
+            }
+        }
+
         handle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
             Task { @MainActor in
                 self?.user = user
