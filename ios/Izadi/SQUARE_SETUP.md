@@ -8,7 +8,7 @@ Do this with the **business Square account** (your friend’s seller account):
 
 1. Open [https://developer.squareup.com/apps](https://developer.squareup.com/apps)
 2. Open the existing app that has Application ID  
-   `sq0idp-f1wy8hZaRNEuvqGnb-yFnw`  
+   `sq0idp-urZsWABGSBP75wz3nbpMvw`  
    (or create a new app and put its Application ID into `ios/Izadi/Izadi/Services/SquareConfig.swift`)
 3. Left menu → **Point of Sale API**
 4. Under **iOS**, enter exactly:

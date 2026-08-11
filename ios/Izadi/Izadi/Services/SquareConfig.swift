@@ -11,7 +11,7 @@ import Foundation
 /// 4. Save
 enum SquareConfig {
     /// Same Application ID used previously for Android testing.
-    static let applicationId = "sq0idp-f1wy8hZaRNEuvqGnb-yFnw"
+    static let applicationId = "sq0idp-urZsWABGSBP75wz3nbpMvw"
 
     /// Must match Info.plist URL Types + Square Developer Dashboard.
     static let callbackURLScheme = "izadicounselling"
