@@ -15,6 +15,23 @@ struct BackButton: View {
     }
 }
 
+struct CircularAddButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Image(systemName: "plus")
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(width: 32, height: 32)
+                .background(IzadiColor.sage)
+                .clipShape(Circle())
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("New")
+    }
+}
+
 struct PrimaryButton: View {
     let title: String
     var enabled: Bool = true

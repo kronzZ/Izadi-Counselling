@@ -16,13 +16,10 @@ struct ClientsView: View {
                     BackButton { path.removeLast() }
                     Spacer()
                     if !pickerMode {
-                        Button {
+                        CircularAddButton {
                             path.append(AppRoute.newClient)
-                        } label: {
-                            Text("New")
-                                .font(.izadi(.bodyMedium))
-                                .foregroundStyle(IzadiColor.sage)
                         }
+                        .padding(.trailing, 8)
                     }
                 }
                 .padding(.horizontal, 16)

@@ -14,14 +14,10 @@ struct ManageSessionsView: View {
                 HStack {
                     BackButton { path.removeLast() }
                     Spacer()
-                    Button {
+                    CircularAddButton {
                         path.append(AppRoute.newBookingChoice)
-                    } label: {
-                        Text("New")
-                            .font(.izadi(.bodyMedium))
-                            .foregroundStyle(IzadiColor.sage)
                     }
-                    .padding(.trailing, 20)
+                    .padding(.trailing, 8)
                 }
                 .padding(.horizontal, 16)
 
