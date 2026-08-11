@@ -1,5 +1,4 @@
 import SwiftUI
-import MessageUI
 
 struct HomeView: View {
     @EnvironmentObject private var store: PracticeStore
@@ -16,26 +15,103 @@ struct HomeView: View {
     var body: some View {
         NavigationStack(path: $path) {
             SoftScreenBackground {
-                ScrollView(showsIndicators: false) {
-                    VStack(alignment: .leading, spacing: 28) {
-                        header
-                            .opacity(showHero ? 1 : 0)
-                            .offset(y: showHero ? 0 : 14)
+                VStack(alignment: .leading, spacing: 0) {
+                    // Hero: brand left, bird right — matches Android HomeScreen
+                    VStack(alignment: .leading, spacing: 16) {
+                        HStack(alignment: .center, spacing: 12) {
+                            VStack(alignment: .leading, spacing: 2) {
+                                Text("Izadi")
+                                    .font(.custom("OutfitThin-Light", size: 52, relativeTo: .largeTitle))
+                                    .foregroundStyle(IzadiColor.ink)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.8)
 
-                        quoteBlock
-                            .opacity(showHero ? 1 : 0)
+                                Text("Counselling")
+                                    .font(.izadi(.title))
+                                    .foregroundStyle(IzadiColor.sage)
+                                    .tracking(0.4)
 
-                        upcomingBlock
+                                Button("Sign out") {
+                                    store.stop()
+                                    auth.signOut()
+                                }
+                                .font(.izadi(.label))
+                                .foregroundStyle(IzadiColor.inkSoft)
+                                .buttonStyle(.plain)
+                                .padding(.top, 2)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
-                        navGrid
-                            .opacity(showNav ? 1 : 0)
-                            .offset(y: showNav ? 0 : 10)
+                            Image("IzadiLogo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 96, height: 96)
+                                .offset(y: -4)
+                                .accessibilityLabel("Izadi Counselling")
+                        }
+
+                        Text(DailyQuotes.today())
+                            .font(.izadi(.body))
+                            .italic()
+                            .foregroundStyle(IzadiColor.inkSoft)
+                            .padding(.trailing, 48)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
-                    .padding(.horizontal, 24)
-                    .padding(.top, 18)
-                    .padding(.bottom, 36)
+                    .opacity(showHero ? 1 : 0)
+                    .offset(y: showHero ? 0 : 14)
+                    .padding(.top, 40)
+
+                    // Upcoming sessions
+                    VStack(alignment: .leading, spacing: 10) {
+                        Text("Your next 5 sessions")
+                            .font(.izadi(.titleMedium))
+                            .foregroundStyle(IzadiColor.ink)
+
+                        upcomingPanel
+                    }
+                    .padding(.top, 20)
+                    .opacity(showHero ? 1 : 0)
+                    .frame(maxHeight: .infinity)
+
+                    // Nav actions — title + subtitle like Android
+                    VStack(spacing: 8) {
+                        HomeNavButton(
+                            title: "Clients",
+                            subtitle: "People you see",
+                            systemImage: "person.2"
+                        ) {
+                            path.append(AppRoute.clients)
+                        }
+                        HomeNavButton(
+                            title: "Manage sessions",
+                            subtitle: "Make, delete or edit bookings",
+                            systemImage: "calendar"
+                        ) {
+                            path.append(AppRoute.sessions)
+                        }
+                        HomeNavButton(
+                            title: "Payments",
+                            subtitle: "Past and future payments",
+                            systemImage: "doc.text"
+                        ) {
+                            path.append(AppRoute.payments)
+                        }
+                        HomeNavButton(
+                            title: "Send welcome SMS",
+                            subtitle: "Welcome note and pricing guide",
+                            systemImage: "message"
+                        ) {
+                            showWelcomeSms = true
+                        }
+                    }
+                    .padding(.top, 14)
+                    .padding(.bottom, 24)
+                    .opacity(showNav ? 1 : 0)
+                    .offset(y: showNav ? 0 : 10)
                 }
+                .padding(.horizontal, 24)
             }
+            .toolbar(.hidden, for: .navigationBar)
             .navigationDestination(for: AppRoute.self) { route in
                 destination(for: route)
             }
@@ -44,19 +120,6 @@ struct HomeView: View {
                     template: store.welcomeSmsTemplate,
                     onTemplateChange: store.updateWelcomeSmsTemplate
                 )
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button("Sign out", role: .destructive) {
-                            store.stop()
-                            auth.signOut()
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
-                            .foregroundStyle(IzadiColor.sage)
-                    }
-                }
             }
         }
         .onAppear {
@@ -68,69 +131,66 @@ struct HomeView: View {
         .onReceive(clock) { now = $0 }
     }
 
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Image("IzadiLogo")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 72, height: 72)
-            Text("Izadi")
-                .font(.izadi(.display))
-                .foregroundStyle(IzadiColor.ink)
-            Text("Counselling practice")
-                .font(.izadi(.label))
-                .tracking(2.2)
-                .foregroundStyle(IzadiColor.sageSoft)
-        }
-    }
-
-    private var quoteBlock: some View {
-        Text(DailyQuotes.today())
-            .font(.izadi(.body))
-            .italic()
-            .foregroundStyle(IzadiColor.inkSoft)
-            .fixedSize(horizontal: false, vertical: true)
-    }
-
-    private var upcomingBlock: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("UPCOMING")
-                .font(.izadi(.label))
-                .tracking(2.2)
-                .foregroundStyle(IzadiColor.sageSoft)
-
-            let upcoming = SessionQueries.upcoming(store.sessions)
+    private var upcomingPanel: some View {
+        let upcoming = SessionQueries.upcoming(store.sessions)
+        return Group {
             if upcoming.isEmpty {
-                EmptyStateText(
-                    title: "No sessions booked",
-                    subtitle: "When you book, the next five will appear here."
-                )
+                VStack(spacing: 6) {
+                    Spacer(minLength: 0)
+                    Text("No upcoming sessions")
+                        .font(.izadi(.titleMedium))
+                        .foregroundStyle(IzadiColor.sage)
+                    Text("Your next five bookings will show here.")
+                        .font(.izadi(.bodyMedium))
+                        .foregroundStyle(IzadiColor.inkSoft)
+                        .multilineTextAlignment(.center)
+                    Spacer(minLength: 0)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .padding(8)
+                .background(IzadiColor.foam.opacity(0.55))
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             } else {
-                ForEach(upcoming) { session in
-                    SessionRowCard(
-                        session: session,
-                        awaitingWrapUp: SessionQueries.isAwaitingWrapUp(session, now: now)
-                    ) {
-                        path.append(AppRoute.sessionDetail(session.id))
+                VStack(spacing: 6) {
+                    ForEach(upcoming) { session in
+                        Button {
+                            path.append(AppRoute.sessionDetail(session.id))
+                        } label: {
+                            HStack {
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text(session.clientName)
+                                        .font(.izadi(.body))
+                                        .foregroundStyle(IzadiColor.ink)
+                                    Text("\(session.shortDate) · \(session.friendlyTime)")
+                                        .font(.izadi(.bodyMedium))
+                                        .foregroundStyle(IzadiColor.inkSoft)
+                                    if SessionQueries.isAwaitingWrapUp(session, now: now) {
+                                        Text("Awaiting wrap-up")
+                                            .font(.izadi(.label))
+                                            .foregroundStyle(IzadiColor.roseDeep)
+                                    }
+                                }
+                                Spacer()
+                                Image(systemName: "chevron.right")
+                                    .foregroundStyle(IzadiColor.sageSoft)
+                            }
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 10)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+                            .background(
+                                SessionQueries.isAwaitingWrapUp(session, now: now)
+                                ? IzadiColor.butter
+                                : IzadiColor.foam.opacity(0.95)
+                            )
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
-            }
-        }
-    }
-
-    private var navGrid: some View {
-        VStack(spacing: 12) {
-            HomeNavButton(title: "Clients", systemImage: "person.2") {
-                path.append(AppRoute.clients)
-            }
-            HomeNavButton(title: "Sessions", systemImage: "calendar") {
-                path.append(AppRoute.sessions)
-            }
-            HomeNavButton(title: "Payments", systemImage: "doc.text") {
-                path.append(AppRoute.payments)
-            }
-            HomeNavButton(title: "Welcome SMS", systemImage: "message") {
-                showWelcomeSms = true
+                .padding(8)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(IzadiColor.foam.opacity(0.55))
+                .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             }
         }
     }
@@ -193,6 +253,7 @@ enum AppRoute: Hashable {
 
 private struct HomeNavButton: View {
     let title: String
+    let subtitle: String
     let systemImage: String
     let action: () -> Void
 
@@ -206,14 +267,20 @@ private struct HomeNavButton: View {
                     Image(systemName: systemImage)
                         .foregroundStyle(IzadiColor.sage)
                 }
-                Text(title)
-                    .font(.izadi(.titleMedium))
-                    .foregroundStyle(IzadiColor.ink)
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(title)
+                        .font(.izadi(.titleMedium))
+                        .foregroundStyle(IzadiColor.ink)
+                    Text(subtitle)
+                        .font(.izadi(.bodyMedium))
+                        .foregroundStyle(IzadiColor.inkSoft)
+                }
                 Spacer()
                 Image(systemName: "arrow.right")
                     .foregroundStyle(IzadiColor.sageSoft)
             }
-            .padding(16)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
             .background(IzadiColor.foam)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }

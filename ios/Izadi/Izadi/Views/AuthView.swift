@@ -28,6 +28,11 @@ struct AuthView: View {
                         .foregroundStyle(IzadiColor.ink)
                         .opacity(appear ? 1 : 0)
 
+                    Text("Counselling")
+                        .font(.izadi(.title))
+                        .foregroundStyle(IzadiColor.sage)
+                        .opacity(appear ? 1 : 0)
+
                     Text(isCreatingAccount
                           ? "Create the practice login once. Use this same email after any reinstall."
                           : "Sign in with the practice email. You’ll stay signed in on this phone.")
