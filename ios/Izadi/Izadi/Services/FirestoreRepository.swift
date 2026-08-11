@@ -40,7 +40,7 @@ enum FirestoreMapping {
         else { return nil }
 
         let relationshipRaw = data["relationship"] as? String
-        let relationship = relationshipRaw.flatMap(EmergencyRelationship.init(rawValue:))
+        let relationship = EmergencyRelationship.fromStored(relationshipRaw)
 
         return Client(
             id: id,

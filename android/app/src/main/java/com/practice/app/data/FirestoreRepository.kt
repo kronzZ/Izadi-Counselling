@@ -156,7 +156,7 @@ private fun com.google.firebase.firestore.DocumentSnapshot.toClientOrNull(): Cli
         emergencyContactName = data["emergencyContactName"] as? String ?: "",
         emergencyContactNumber = data["emergencyContactNumber"] as? String ?: "",
         relationship = relationshipName?.let { name ->
-            EmergencyRelationship.entries.find { it.name == name }
+            EmergencyRelationship.entries.find { it.name == name || it.label == name }
         },
         isActive = data["isActive"] as? Boolean ?: true,
         createdAtEpochMs = (data["createdAtEpochMs"] as? Number)?.toLong() ?: 0L,
