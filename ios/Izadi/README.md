@@ -16,4 +16,4 @@ Create an account (or sign in). Clients, sessions, and the welcome SMS template 
 
 ## Bundle ID
 
-`com.practice.app` — keep aligned with Firebase (and Square if you use tap-to-pay).
+`com.practice.app` — keep aligned with Firebase (and Square — see `SQUARE_SETUP.md`).

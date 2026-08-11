@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SessionDetailView: View {
     @EnvironmentObject private var store: PracticeStore
+    @EnvironmentObject private var squarePayments: SquarePaymentCoordinator
     let session: Session
     @Binding var path: NavigationPath
 
@@ -9,6 +10,8 @@ struct SessionDetailView: View {
     @State private var showCompleteSheet = false
     @State private var paymentDollars = "150"
     @State private var completeError: String?
+    /// Kept across the Square app switch so we still know the amount on return.
+    @State private var pendingTapAmountCents: Int?
 
     init(session: Session, path: Binding<NavigationPath>) {
         self.session = session
@@ -49,6 +52,7 @@ struct SessionDetailView: View {
 
                         if draft.status == .scheduled {
                             PrimaryButton(title: "Mark complete") {
+                                completeError = nil
                                 showCompleteSheet = true
                             }
                             Button {
@@ -103,6 +107,24 @@ struct SessionDetailView: View {
                 draft = latest
             }
         }
+        .onChange(of: squarePayments.completedSessionId) { _, sessionId in
+            guard let sessionId, sessionId == draft.id else { return }
+            let cents = pendingTapAmountCents
+                ?? MoneyFormatting.parseDollarsToCents(paymentDollars)
+            squarePayments.clearCompletion()
+            guard let cents else {
+                completeError = "Payment succeeded in Square, but the amount could not be recorded. Mark cash manually if needed."
+                return
+            }
+            applyPaid(amountCents: cents, method: .tapped)
+            pendingTapAmountCents = nil
+        }
+        .onChange(of: squarePayments.lastError) { _, message in
+            guard let message else { return }
+            completeError = message
+            pendingTapAmountCents = nil
+            squarePayments.clearError()
+        }
     }
 
     private var notesField: some View {
@@ -139,13 +161,13 @@ struct SessionDetailView: View {
                 FoamField(title: "Amount (AUD)", text: $paymentDollars, keyboard: .decimalPad)
 
                 PrimaryButton(title: "Paid cash") {
-                    complete(method: .cash)
+                    completeCash()
                 }
 
                 Button {
-                    complete(method: .tapped)
+                    startSquareTap()
                 } label: {
-                    Text(SquareConfig.isConfigured ? "Tap with Square" : "Tap (configure Square)")
+                    Text("Tap with Square")
                         .font(.izadi(.boldBody))
                         .foregroundStyle(IzadiColor.ink)
                         .frame(maxWidth: .infinity)
@@ -156,9 +178,15 @@ struct SessionDetailView: View {
                 .buttonStyle(.plain)
                 .disabled(!SquareConfig.isConfigured)
 
-                Text("Square Point of Sale must be installed and registered for this bundle ID. Cash always works offline.")
+                Text("Opens Square Point of Sale on this phone. The session is marked paid only after Square confirms the payment.")
                     .font(.izadi(.bodyMedium))
                     .foregroundStyle(IzadiColor.inkSoft)
+
+                if let completeError {
+                    Text(completeError)
+                        .font(.izadi(.bodyMedium))
+                        .foregroundStyle(IzadiColor.roseDeep)
+                }
 
                 Spacer()
             }
@@ -166,15 +194,42 @@ struct SessionDetailView: View {
         }
     }
 
-    private func complete(method: PaymentMethod) {
+    private func completeCash() {
         guard let cents = MoneyFormatting.parseDollarsToCents(paymentDollars) else {
             completeError = "Enter a valid amount like 150 or 150.00"
             return
         }
+        applyPaid(amountCents: cents, method: .cash)
+    }
+
+    private func startSquareTap() {
+        guard let cents = MoneyFormatting.parseDollarsToCents(paymentDollars) else {
+            completeError = "Enter a valid amount like 150 or 150.00"
+            return
+        }
+        completeError = nil
+        pendingTapAmountCents = cents
+
+        do {
+            try squarePayments.startTapPayment(
+                sessionId: draft.id,
+                amountCents: cents,
+                clientName: draft.clientName
+            )
+            showCompleteSheet = false
+        } catch SquarePaymentError.squareNotInstalled {
+            completeError = SquarePaymentError.squareNotInstalled.localizedDescription
+            squarePayments.openAppStoreListing()
+        } catch {
+            completeError = error.localizedDescription
+        }
+    }
+
+    private func applyPaid(amountCents: Int, method: PaymentMethod) {
         var updated = draft
         updated.status = .completed
         updated.paymentStatus = .paid
-        updated.paymentAmountCents = cents
+        updated.paymentAmountCents = amountCents
         updated.paymentMethod = method
         draft = updated
         store.updateSession(updated)

@@ -10,7 +10,16 @@ class AppDelegate: NSObject, UIApplicationDelegate {
         if FirebaseApp.app() == nil {
             FirebaseApp.configure()
         }
+        SquarePaymentCoordinator.shared.configureIfNeeded()
         return true
+    }
+
+    func application(
+        _ app: UIApplication,
+        open url: URL,
+        options: [UIApplication.OpenURLOptionsKey: Any] = [:]
+    ) -> Bool {
+        SquarePaymentCoordinator.shared.handleOpenURL(url)
     }
 }
 
@@ -34,6 +43,7 @@ struct IzadiApp: App {
                     } else if auth.isSignedIn {
                         HomeView()
                             .environmentObject(store)
+                            .environmentObject(SquarePaymentCoordinator.shared)
                             .onAppear {
                                 if let uid = auth.uid {
                                     store.start(uid: uid)
@@ -57,6 +67,9 @@ struct IzadiApp: App {
                         .transition(.opacity)
                         .zIndex(1)
                 }
+            }
+            .onOpenURL { url in
+                _ = SquarePaymentCoordinator.shared.handleOpenURL(url)
             }
             .task {
                 try? await Task.sleep(nanoseconds: 2_000_000_000)

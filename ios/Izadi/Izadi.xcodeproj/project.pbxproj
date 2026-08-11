@@ -37,6 +37,8 @@
 		2E58C63D05C74348BFAF0058 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = DCACA48070CE494BBD3AE695 /* FirebaseFirestore */; };
 		01132961CD064335A24CBC96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 873336089F754179B9F1EE9D /* GoogleService-Info.plist */; };
 		572AC062675B4284BAEF4FF2 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15860CD5163B4619B301F7E6 /* AuthView.swift */; };
+		6AD7CEB34DF8472797360FAA /* SquarePaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */; };
+		1CD15DD77C094D8F925DEDC8 /* SquarePointOfSaleSDK in Frameworks */ = {isa = PBXBuildFile; productRef = DA8C1567441F4755B430CEED /* SquarePointOfSaleSDK */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +72,7 @@
 		CA1182A35CA84AE58A94136F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		873336089F754179B9F1EE9D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		15860CD5163B4619B301F7E6 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquarePaymentCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CD15DD77C094D8F925DEDC8 /* SquarePointOfSaleSDK in Frameworks */,
 				A7E6099CFDC041ECBFF01655 /* FirebaseAuth in Frameworks */,
 				2E58C63D05C74348BFAF0058 /* FirebaseFirestore in Frameworks */,
 			);
@@ -130,6 +134,7 @@
 		A9F8CE0B2867476D9E7819F7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */,
 				FA23A1B3D598480BBE9C56E3 /* AuthService.swift */,
 				E24EF5D45754471BB4ECF81C /* FirestoreRepository.swift */,
 				8154D32BBDC04A6E83E21DA5 /* PracticeStore.swift */,
@@ -202,6 +207,7 @@
 			);
 			name = Izadi;
 			packageProductDependencies = (
+				DA8C1567441F4755B430CEED /* SquarePointOfSaleSDK */,
 				FD67CC07853444A6951B9A0F /* FirebaseAuth */,
 				DCACA48070CE494BBD3AE695 /* FirebaseFirestore */,
 			);
@@ -229,6 +235,7 @@
 			);
 			mainGroup = 4F59267C5A9E45D18A060B29;
 			packageReferences = (
+				39EE178E5F3342B0970F3EFD /* XCRemoteSwiftPackageReference "SquarePointOfSaleSDK-iOS" */,
 				A9803CB2B7E8470592600A98 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 11951BC6573242C2A4C6B80E /* Products */;
@@ -260,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AD7CEB34DF8472797360FAA /* SquarePaymentCoordinator.swift in Sources */,
 				572AC062675B4284BAEF4FF2 /* AuthView.swift in Sources */,
 				DA11049BA31E4194AA3162FA /* IzadiApp.swift in Sources */,
 				C325C278B69448F4BC38AA0C /* Client.swift in Sources */,
@@ -396,6 +404,14 @@
 				minimumVersion = 11.0.0;
 			};
 		};
+		39EE178E5F3342B0970F3EFD /* XCRemoteSwiftPackageReference "SquarePointOfSaleSDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/square/SquarePointOfSaleSDK-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -408,6 +424,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A9803CB2B7E8470592600A98 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseFirestore;
+		};
+		DA8C1567441F4755B430CEED /* SquarePointOfSaleSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39EE178E5F3342B0970F3EFD /* XCRemoteSwiftPackageReference "SquarePointOfSaleSDK-iOS" */;
+			productName = SquarePointOfSaleSDK;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
