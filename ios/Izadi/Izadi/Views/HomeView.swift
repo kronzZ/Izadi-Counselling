@@ -63,32 +63,28 @@ struct HomeView: View {
                     .opacity(showHero ? 1 : 0)
                     .frame(maxHeight: .infinity)
 
-                    // Nav actions — title + subtitle like Android
+                    // Nav actions
                     VStack(spacing: 8) {
                         HomeNavButton(
                             title: "Clients",
-                            subtitle: "People you see",
                             systemImage: "person.2"
                         ) {
                             path.append(AppRoute.clients)
                         }
                         HomeNavButton(
                             title: "Manage sessions",
-                            subtitle: "Make, delete or edit bookings",
                             systemImage: "calendar"
                         ) {
                             path.append(AppRoute.sessions)
                         }
                         HomeNavButton(
                             title: "Payments",
-                            subtitle: "Past and future payments",
                             systemImage: "doc.text"
                         ) {
                             path.append(AppRoute.payments)
                         }
                         HomeNavButton(
                             title: "Send welcome SMS",
-                            subtitle: "Welcome note and pricing guide",
                             systemImage: "message"
                         ) {
                             showWelcomeSms = true
@@ -243,7 +239,6 @@ enum AppRoute: Hashable {
 
 private struct HomeNavButton: View {
     let title: String
-    let subtitle: String
     let systemImage: String
     let action: () -> Void
 
@@ -257,20 +252,15 @@ private struct HomeNavButton: View {
                     Image(systemName: systemImage)
                         .foregroundStyle(IzadiColor.sage)
                 }
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(title)
-                        .font(.izadi(.titleMedium))
-                        .foregroundStyle(IzadiColor.ink)
-                    Text(subtitle)
-                        .font(.izadi(.bodyMedium))
-                        .foregroundStyle(IzadiColor.inkSoft)
-                }
+                Text(title)
+                    .font(.izadi(.titleMedium))
+                    .foregroundStyle(IzadiColor.ink)
                 Spacer()
                 Image(systemName: "arrow.right")
                     .foregroundStyle(IzadiColor.sageSoft)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 12)
+            .padding(.vertical, 14)
             .background(IzadiColor.foam)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
         }
