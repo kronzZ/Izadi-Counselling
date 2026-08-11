@@ -9,6 +9,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,6 +54,55 @@ fun PracticeApp(
         showSplash = false
     }
 
+    if (viewModel.currentUser == null) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            AuthScreen(
+                errorMessage = viewModel.authError,
+                onSignIn = viewModel::signIn,
+                onSignUp = viewModel::signUp,
+            )
+            AnimatedVisibility(
+                visible = showSplash,
+                enter = EnterTransition.None,
+                exit = fadeOut(
+                    animationSpec = tween(durationMillis = 560, easing = FastOutSlowInEasing),
+                ),
+            ) {
+                SplashScreen()
+            }
+        }
+        return
+    }
+
+    if (viewModel.pendingLocalImport) {
+        AlertDialog(
+            onDismissRequest = {},
+            title = { Text("Import local data?") },
+            text = {
+                Text(
+                    "This phone still has clients and sessions saved on-device. " +
+                        "Import them into Firebase so Android and iPhone stay in sync?",
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = viewModel::importLocalDataToCloud,
+                    enabled = !viewModel.isImporting,
+                ) {
+                    Text(if (viewModel.isImporting) "Importing…" else "Import to cloud")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = viewModel::dismissLocalImport,
+                    enabled = !viewModel.isImporting,
+                ) {
+                    Text("Skip")
+                }
+            },
+        )
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         // Always under the splash so SoftCloud never crossfades through the brand mark.
         NavHost(
@@ -75,6 +127,7 @@ fun PracticeApp(
                 onOpenSession = { session ->
                     navController.navigate(Destinations.sessionDetail(session.id))
                 },
+                onSignOut = viewModel::signOut,
             )
         }
         composable(Destinations.Clients) {

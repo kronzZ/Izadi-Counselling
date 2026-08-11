@@ -1,0 +1,7 @@
+.DS_Store
+.idea/
+*.iml
+
+# Optional: if you keep private console downloads outside the placeholders,
+# you can ignore them here. The repo ships placeholder Firebase configs so
+# projects open cleanly before you paste the real files.

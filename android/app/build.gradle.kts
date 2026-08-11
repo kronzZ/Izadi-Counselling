@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -44,6 +45,7 @@ android {
 
 dependencies {
     val composeBom = platform("androidx.compose:compose-bom:2024.10.01")
+    val firebaseBom = platform("com.google.firebase:firebase-bom:33.7.0")
 
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.core:core-splashscreen:1.0.1")
@@ -55,7 +57,12 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.navigation:navigation-compose:2.8.4")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.9.0")
     implementation("com.squareup.sdk:point-of-sale-sdk:2.0")
+
+    implementation(firebaseBom)
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
 
     implementation(composeBom)
     implementation("androidx.compose.ui:ui")
