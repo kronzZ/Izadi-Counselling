@@ -24,11 +24,13 @@ struct AppLockView: View {
                         .font(.izadi(.title))
                         .foregroundStyle(IzadiColor.sage)
 
-                    Text("Unlock to open the practice")
-                        .font(.izadi(.body))
-                        .foregroundStyle(IzadiColor.inkSoft)
-                        .multilineTextAlignment(.center)
-                        .padding(.top, 4)
+                    if !appLock.isUnlocked {
+                        Text("Unlock to open the practice")
+                            .font(.izadi(.body))
+                            .foregroundStyle(IzadiColor.inkSoft)
+                            .multilineTextAlignment(.center)
+                            .padding(.top, 4)
+                    }
                 }
 
                 if let error = appLock.errorMessage {
@@ -39,26 +41,28 @@ struct AppLockView: View {
                         .padding(.horizontal, 32)
                 }
 
-                Button {
-                    Task { await appLock.authenticate() }
-                } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: unlockSymbol)
-                            .font(.system(size: 18, weight: .medium))
-                        Text(appLock.isAuthenticating
-                              ? "Waiting…"
-                              : "Unlock with \(appLock.biometryLabel)")
-                            .font(.izadi(.boldBody))
+                if !appLock.isUnlocked {
+                    Button {
+                        Task { await appLock.authenticate() }
+                    } label: {
+                        HStack(spacing: 10) {
+                            Image(systemName: unlockSymbol)
+                                .font(.system(size: 18, weight: .medium))
+                            Text(appLock.isAuthenticating
+                                  ? "Waiting…"
+                                  : "Unlock with \(appLock.biometryLabel)")
+                                .font(.izadi(.boldBody))
+                        }
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(IzadiColor.sage)
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 16)
-                    .background(IzadiColor.sage)
-                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                    .disabled(appLock.isAuthenticating)
+                    .padding(.horizontal, 40)
+                    .padding(.top, 8)
                 }
-                .disabled(appLock.isAuthenticating)
-                .padding(.horizontal, 40)
-                .padding(.top, 8)
 
                 Spacer()
                 Spacer()
