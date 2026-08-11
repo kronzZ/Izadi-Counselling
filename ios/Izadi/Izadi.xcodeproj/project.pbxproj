@@ -409,7 +409,7 @@
 			repositoryURL = "https://github.com/square/SquarePointOfSaleSDK-iOS";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 3.5.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
