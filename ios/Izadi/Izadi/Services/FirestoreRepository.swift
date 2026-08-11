@@ -255,6 +255,10 @@ final class FirestoreRepository {
             .setData(FirestoreMapping.sessionData(session), merge: true)
     }
 
+    func deleteSession(uid: String, sessionId: String) async throws {
+        try await FirestorePaths.sessions(uid).document(sessionId).delete()
+    }
+
     func updateWelcomeSmsTemplate(uid: String, template: String) async throws {
         let saved = template.trimmingCharacters(in: .whitespacesAndNewlines)
         let value = saved.isEmpty ? WelcomeSms.defaultTemplate : saved

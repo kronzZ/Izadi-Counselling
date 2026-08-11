@@ -12,6 +12,7 @@ struct SessionDetailView: View {
     @State private var completeError: String?
     /// Kept across the Square app switch so we still know the amount on return.
     @State private var pendingTapAmountCents: Int?
+    @State private var showDeletePaymentConfirm = false
 
     init(session: Session, path: Binding<NavigationPath>) {
         self.session = session
@@ -83,6 +84,21 @@ struct SessionDetailView: View {
                                     .frame(maxWidth: .infinity)
                                     .padding(.vertical, 14)
                             }
+                        }
+
+                        if draft.paymentStatus == .paid {
+                            Button {
+                                showDeletePaymentConfirm = true
+                            } label: {
+                                Text("Delete payment")
+                                    .font(.izadi(.boldBody))
+                                    .foregroundStyle(.white)
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 16)
+                                    .background(IzadiColor.roseDeep)
+                                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                            }
+                            .buttonStyle(.plain)
                         }
 
                         if let completeError {

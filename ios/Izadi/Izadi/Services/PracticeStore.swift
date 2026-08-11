@@ -140,6 +140,18 @@ final class PracticeStore: ObservableObject {
         }
     }
 
+    func deleteSession(sessionId: String) {
+        guard let uid else { return }
+        sessions.removeAll { $0.id == sessionId }
+        Task {
+            do {
+                try await repository.deleteSession(uid: uid, sessionId: sessionId)
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
     func updateWelcomeSmsTemplate(_ template: String) {
         guard let uid else { return }
         let saved = template.trimmingCharacters(in: .whitespacesAndNewlines)
