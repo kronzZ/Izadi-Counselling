@@ -95,7 +95,7 @@ struct HomeView: View {
                             path.append(AppRoute.payments)
                         }
                         HomeNavButton(
-                            title: "Send welcome SMS",
+                            title: "Welcome SMS",
                             systemImage: "message"
                         ) {
                             showWelcomeSms = true
