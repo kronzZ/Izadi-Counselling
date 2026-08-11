@@ -39,6 +39,8 @@
 		572AC062675B4284BAEF4FF2 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15860CD5163B4619B301F7E6 /* AuthView.swift */; };
 		6AD7CEB34DF8472797360FAA /* SquarePaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */; };
 		1CD15DD77C094D8F925DEDC8 /* SquarePointOfSaleSDK in Frameworks */ = {isa = PBXBuildFile; productRef = DA8C1567441F4755B430CEED /* SquarePointOfSaleSDK */; };
+		A1B2C3D4E5F60718293A4B5C /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */; };
+		C3D4E5F60718293A4B5C6D7E /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +75,8 @@
 		873336089F754179B9F1EE9D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		15860CD5163B4619B301F7E6 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
 		E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquarePaymentCoordinator.swift; sourceTree = "<group>"; };
+		B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockService.swift; sourceTree = "<group>"; };
+		D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */,
+				B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */,
 				FA23A1B3D598480BBE9C56E3 /* AuthService.swift */,
 				E24EF5D45754471BB4ECF81C /* FirestoreRepository.swift */,
 				8154D32BBDC04A6E83E21DA5 /* PracticeStore.swift */,
@@ -154,6 +159,7 @@
 		92B2A59DECB14A6393D65E09 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */,
 				15860CD5163B4619B301F7E6 /* AuthView.swift */,
 				AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */,
 				97F922B8A4384D6EAC45361A /* ClientDetailView.swift */,
@@ -268,6 +274,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6AD7CEB34DF8472797360FAA /* SquarePaymentCoordinator.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5C /* AppLockService.swift in Sources */,
+				C3D4E5F60718293A4B5C6D7E /* AppLockView.swift in Sources */,
 				572AC062675B4284BAEF4FF2 /* AuthView.swift in Sources */,
 				DA11049BA31E4194AA3162FA /* IzadiApp.swift in Sources */,
 				C325C278B69448F4BC38AA0C /* Client.swift in Sources */,

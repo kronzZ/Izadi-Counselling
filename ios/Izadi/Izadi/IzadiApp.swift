@@ -28,7 +28,9 @@ struct IzadiApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var auth = AuthService()
     @StateObject private var store = PracticeStore()
+    @StateObject private var appLock = AppLockService()
 
+    @Environment(\.scenePhase) private var scenePhase
     @State private var showSplash = true
 
     var body: some Scene {
@@ -44,6 +46,7 @@ struct IzadiApp: App {
                         HomeView()
                             .environmentObject(store)
                             .environmentObject(SquarePaymentCoordinator.shared)
+                            .environmentObject(appLock)
                             .onAppear {
                                 if let uid = auth.uid {
                                     store.start(uid: uid)
@@ -56,20 +59,43 @@ struct IzadiApp: App {
                                     store.stop()
                                 }
                             }
+                            .allowsHitTesting(appLock.isUnlocked && !appLock.isPrivacyCovered)
                     } else {
                         AuthView()
                             .environmentObject(auth)
+                            .onAppear { appLock.clearForSignedOut() }
                     }
+                }
+
+                if auth.isSignedIn && appLock.needsLockScreen && !showSplash {
+                    AppLockView()
+                        .environmentObject(appLock)
+                        .transition(.opacity)
+                        .zIndex(2)
                 }
 
                 if showSplash {
                     SplashView()
                         .transition(.opacity)
-                        .zIndex(1)
+                        .zIndex(3)
                 }
             }
             .onOpenURL { url in
                 _ = SquarePaymentCoordinator.shared.handleOpenURL(url)
+            }
+            .onChange(of: scenePhase) { _, phase in
+                guard !showSplash else { return }
+                appLock.handleScenePhase(phase, isSignedIn: auth.isSignedIn)
+            }
+            .onChange(of: auth.isSignedIn) { _, signedIn in
+                if signedIn {
+                    appLock.lock()
+                    if !showSplash {
+                        Task { await appLock.authenticate() }
+                    }
+                } else {
+                    appLock.clearForSignedOut()
+                }
             }
             .task {
                 try? await Task.sleep(nanoseconds: 2_000_000_000)
@@ -81,6 +107,9 @@ struct IzadiApp: App {
                 try? await Task.sleep(nanoseconds: 1_400_000_000)
                 withAnimation(.easeOut(duration: 0.35)) {
                     showSplash = false
+                }
+                if auth.isSignedIn && !appLock.isUnlocked {
+                    await appLock.authenticate()
                 }
             }
         }

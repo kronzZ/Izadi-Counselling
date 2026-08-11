@@ -3,6 +3,7 @@ import SwiftUI
 struct SessionDetailView: View {
     @EnvironmentObject private var store: PracticeStore
     @EnvironmentObject private var squarePayments: SquarePaymentCoordinator
+    @EnvironmentObject private var appLock: AppLockService
     let session: Session
     @Binding var path: NavigationPath
 
@@ -236,6 +237,8 @@ struct SessionDetailView: View {
         pendingTapAmountCents = cents
 
         do {
+            // Leaving for Square POS — don't demand Face ID on the way back.
+            appLock.allowNextResumeWithoutAuth()
             try squarePayments.startTapPayment(
                 sessionId: draft.id,
                 amountCents: cents,

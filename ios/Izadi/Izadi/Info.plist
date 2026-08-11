@@ -49,6 +49,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Izadi Counselling uses Face ID to protect client information when you open the app.</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>square-commerce-v1</string>
