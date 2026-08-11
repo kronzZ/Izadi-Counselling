@@ -52,7 +52,9 @@ struct IzadiApp: App {
                                 .environmentObject(SquarePaymentCoordinator.shared)
                                 .environmentObject(appLock)
                         } else {
-                            SoftScreenBackground(fullMint: true)
+                            // Still show the app background while Face ID is pending,
+                            // but don't mount HomeView until we have unlocked.
+                            SoftScreenBackground(fullMint: true) { EmptyView() }
                         }
                     } else {
                         AuthView()
