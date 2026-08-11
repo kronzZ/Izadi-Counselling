@@ -3,7 +3,6 @@ import UIKit
 import SquarePointOfSaleSDK
 
 /// Launches Square Point of Sale for tap-to-pay and parses the return URL.
-@MainActor
 final class SquarePaymentCoordinator: ObservableObject {
     static let shared = SquarePaymentCoordinator()
 
@@ -58,7 +57,6 @@ final class SquarePaymentCoordinator: ObservableObject {
         )
 
         let money = try SCCMoney(amountCents: amountCents, currencyCode: SquareConfig.currencyCode)
-        // userInfoString comes back on the callback so we can match the session.
         let request = try SCCAPIRequest(
             callbackURL: SquareConfig.callbackURL,
             amount: money,
@@ -80,34 +78,42 @@ final class SquarePaymentCoordinator: ObservableObject {
     func handleOpenURL(_ url: URL) -> Bool {
         guard SCCAPIResponse.isSquareResponse(url) else { return false }
 
-        do {
-            let response = try SCCAPIResponse(responseURL: url)
-            let sessionId = response.userInfoString ?? pending?.sessionId
+        let apply: () -> Void = {
+            do {
+                let response = try SCCAPIResponse(responseURL: url)
+                let sessionId = response.userInfoString ?? self.pending?.sessionId
 
-            if let error = response.error {
-                lastError = error.localizedDescription
-                pending = nil
-                return true
+                if let error = response.error {
+                    self.lastError = error.localizedDescription
+                    self.pending = nil
+                    return
+                }
+
+                guard response.isSuccessResponse else {
+                    self.lastError = "Square payment was not completed."
+                    self.pending = nil
+                    return
+                }
+
+                guard let sessionId, !sessionId.isEmpty else {
+                    self.lastError = "Payment succeeded in Square, but the session could not be matched."
+                    self.pending = nil
+                    return
+                }
+
+                self.completedSessionId = sessionId
+                self.pending = nil
+                self.lastError = nil
+            } catch {
+                self.lastError = error.localizedDescription
+                self.pending = nil
             }
+        }
 
-            guard response.isSuccessResponse else {
-                lastError = "Square payment was not completed."
-                pending = nil
-                return true
-            }
-
-            guard let sessionId, !sessionId.isEmpty else {
-                lastError = "Payment succeeded in Square, but the session could not be matched."
-                pending = nil
-                return true
-            }
-
-            completedSessionId = sessionId
-            pending = nil
-            lastError = nil
-        } catch {
-            lastError = error.localizedDescription
-            pending = nil
+        if Thread.isMainThread {
+            apply()
+        } else {
+            DispatchQueue.main.sync(execute: apply)
         }
         return true
     }
