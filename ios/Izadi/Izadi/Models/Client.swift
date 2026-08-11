@@ -4,10 +4,24 @@ enum EmergencyRelationship: String, Codable, CaseIterable, Identifiable {
     case friend = "Friend"
     case relative = "Relative"
     case colleague = "Colleague"
+    case partnerDefacto = "PartnerDefacto"
     case other = "Other"
 
     var id: String { rawValue }
-    var label: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .partnerDefacto: return "Partner/Defacto"
+        default: return rawValue
+        }
+    }
+
+    /// Accepts stored Firestore values (enum name or display label).
+    static func fromStored(_ value: String?) -> EmergencyRelationship? {
+        guard let value, !value.isEmpty else { return nil }
+        if let match = EmergencyRelationship(rawValue: value) { return match }
+        return allCases.first { $0.label == value || $0.rawValue == value }
+    }
 }
 
 struct Client: Identifiable, Equatable, Hashable {

@@ -2,7 +2,6 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var store: PracticeStore
-    @EnvironmentObject private var auth: AuthService
 
     @State private var showHero = false
     @State private var showNav = false

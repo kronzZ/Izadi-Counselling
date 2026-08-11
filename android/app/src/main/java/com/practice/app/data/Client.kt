@@ -4,6 +4,7 @@ enum class EmergencyRelationship(val label: String) {
     Friend("Friend"),
     Relative("Relative"),
     Colleague("Colleague"),
+    PartnerDefacto("Partner/Defacto"),
     Other("Other"),
 }
 
