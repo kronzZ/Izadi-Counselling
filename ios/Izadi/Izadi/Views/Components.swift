@@ -15,6 +15,33 @@ struct BackButton: View {
     }
 }
 
+/// Disables the edge-swipe back gesture when leaving would discard unsaved edits.
+struct InteractivePopDisabled: UIViewControllerRepresentable {
+    var disabled: Bool
+
+    func makeUIViewController(context: Context) -> Controller {
+        Controller()
+    }
+
+    func updateUIViewController(_ uiViewController: Controller, context: Context) {
+        uiViewController.disabled = disabled
+        uiViewController.apply()
+    }
+
+    final class Controller: UIViewController {
+        var disabled = false
+
+        override func viewDidAppear(_ animated: Bool) {
+            super.viewDidAppear(animated)
+            apply()
+        }
+
+        func apply() {
+            navigationController?.interactivePopGestureRecognizer?.isEnabled = !disabled
+        }
+    }
+}
+
 struct CircularAddButton: View {
     let action: () -> Void
 
@@ -57,6 +84,7 @@ struct FoamField: View {
     @Binding var text: String
     var keyboard: UIKeyboardType = .default
     var autocapitalization: TextInputAutocapitalization = .sentences
+    var isEditable: Bool = true
     var onChange: ((String) -> String)? = nil
 
     var body: some View {
@@ -66,29 +94,44 @@ struct FoamField: View {
                 .tracking(2.2)
                 .foregroundStyle(IzadiColor.sageSoft)
 
-            TextField("", text: $text)
-                .font(.izadi(.body))
-                .foregroundStyle(IzadiColor.ink)
-                .keyboardType(keyboard)
-                .textInputAutocapitalization(autocapitalization)
-                .padding(16)
-                .background(IzadiColor.foam)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                .onChange(of: text) { _, newValue in
-                    if let onChange {
-                        let formatted = onChange(newValue)
-                        if formatted != newValue {
-                            text = formatted
+            Group {
+                if isEditable {
+                    TextField("", text: $text)
+                        .font(.izadi(.body))
+                        .foregroundStyle(IzadiColor.ink)
+                        .keyboardType(keyboard)
+                        .textInputAutocapitalization(autocapitalization)
+                        .onChange(of: text) { _, newValue in
+                            if let onChange {
+                                let formatted = onChange(newValue)
+                                if formatted != newValue {
+                                    text = formatted
+                                }
+                            }
                         }
-                    }
+                } else {
+                    Text(displayText)
+                        .font(.izadi(.body))
+                        .foregroundStyle(IzadiColor.ink)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
+            }
+            .padding(16)
+            .background(IzadiColor.foam)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
+    }
+
+    private var displayText: String {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? "—" : text
     }
 }
 
 struct EmergencyRelationshipPicker: View {
     @Binding var relationship: EmergencyRelationship?
     @Binding var relationshipCustom: String
+    var isEditable: Bool = true
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -97,41 +140,59 @@ struct EmergencyRelationshipPicker: View {
                 .tracking(2.2)
                 .foregroundStyle(IzadiColor.sageSoft)
 
-            Menu {
-                Button("None") {
-                    relationship = nil
-                    relationshipCustom = ""
-                }
-                ForEach(EmergencyRelationship.allCases) { item in
-                    Button(item.label) {
-                        relationship = item
-                        if item != .other {
+            Group {
+                if isEditable {
+                    Menu {
+                        Button("None") {
+                            relationship = nil
                             relationshipCustom = ""
                         }
+                        ForEach(EmergencyRelationship.allCases) { item in
+                            Button(item.label) {
+                                relationship = item
+                                if item != .other {
+                                    relationshipCustom = ""
+                                }
+                            }
+                        }
+                    } label: {
+                        pickerRow(showChevron: true)
                     }
+                } else {
+                    pickerRow(showChevron: false)
                 }
-            } label: {
-                HStack {
-                    Text(pickerLabel)
-                        .font(.izadi(.body))
-                        .foregroundStyle(IzadiColor.ink)
-                    Spacer()
-                    Image(systemName: "chevron.up.chevron.down")
-                        .foregroundStyle(IzadiColor.sageSoft)
-                }
-                .padding(16)
-                .background(IzadiColor.foam)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
             }
 
-            if relationship == .other {
+            if isEditable && relationship == .other {
                 FoamField(
                     title: "Specify relationship",
                     text: $relationshipCustom,
                     autocapitalization: .words
                 )
+            } else if !isEditable && relationship == .other && !relationshipCustom.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                FoamField(
+                    title: "Specify relationship",
+                    text: $relationshipCustom,
+                    isEditable: false
+                )
             }
         }
+    }
+
+    private func pickerRow(showChevron: Bool) -> some View {
+        HStack {
+            Text(pickerLabel)
+                .font(.izadi(.body))
+                .foregroundStyle(IzadiColor.ink)
+            Spacer()
+            if showChevron {
+                Image(systemName: "chevron.up.chevron.down")
+                    .foregroundStyle(IzadiColor.sageSoft)
+            }
+        }
+        .padding(16)
+        .background(IzadiColor.foam)
+        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
     }
 
     private var pickerLabel: String {
