@@ -120,6 +120,8 @@ struct HomeView: View {
             }
         }
         .onAppear {
+            // Entrance animation only once per HomeView lifetime (not after Face ID unlock).
+            guard !showHero else { return }
             withAnimation(.easeOut(duration: 0.6)) { showHero = true }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.09) {
                 withAnimation(.easeOut(duration: 0.55)) { showNav = true }

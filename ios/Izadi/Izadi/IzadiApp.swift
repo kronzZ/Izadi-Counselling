@@ -43,19 +43,13 @@ struct IzadiApp: App {
                                 .tint(IzadiColor.sage)
                         }
                     } else if auth.isSignedIn {
-                        // Important: only mount HomeView after biometrics succeeds.
-                        // This avoids HomeView's hero animation from starting "under" the
-                        // lock screen and then jumping when the lock disappears.
-                        if appLock.isUnlocked {
-                            HomeView()
-                                .environmentObject(store)
-                                .environmentObject(SquarePaymentCoordinator.shared)
-                                .environmentObject(appLock)
-                        } else {
-                            // Still show the app background while Face ID is pending,
-                            // but don't mount HomeView until we have unlocked.
-                            SoftScreenBackground(fullMint: true) { EmptyView() }
-                        }
+                        // Keep HomeView mounted while locked so navigation + form drafts
+                        // survive multitasking (Face ID only overlays, does not remount).
+                        HomeView()
+                            .environmentObject(store)
+                            .environmentObject(SquarePaymentCoordinator.shared)
+                            .environmentObject(appLock)
+                            .allowsHitTesting(appLock.isUnlocked && !appLock.isPrivacyCovered)
                     } else {
                         AuthView()
                             .environmentObject(auth)
