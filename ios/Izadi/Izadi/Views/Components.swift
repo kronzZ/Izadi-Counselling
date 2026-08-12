@@ -79,6 +79,30 @@ struct PrimaryButton: View {
     }
 }
 
+private struct EditableFieldChrome: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(16)
+            .background(IzadiColor.foam)
+            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+}
+
+private struct ReadOnlyFieldChrome: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .padding(.vertical, 12)
+            .padding(.horizontal, 14)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(IzadiColor.mist.opacity(0.55))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .strokeBorder(IzadiColor.sageSoft.opacity(0.22), lineWidth: 1)
+            )
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+    }
+}
+
 struct FoamField: View {
     let title: String
     @Binding var text: String
@@ -109,16 +133,15 @@ struct FoamField: View {
                                 }
                             }
                         }
+                        .modifier(EditableFieldChrome())
                 } else {
                     Text(displayText)
                         .font(.izadi(.body))
-                        .foregroundStyle(IzadiColor.ink)
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .foregroundStyle(IzadiColor.inkSoft)
+                        .modifier(ReadOnlyFieldChrome())
+                        .accessibilityAddTraits(.isStaticText)
                 }
             }
-            .padding(16)
-            .background(IzadiColor.foam)
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
         }
     }
 
@@ -156,10 +179,13 @@ struct EmergencyRelationshipPicker: View {
                             }
                         }
                     } label: {
-                        pickerRow(showChevron: true)
+                        pickerRowContent
+                            .modifier(EditableFieldChrome())
                     }
                 } else {
-                    pickerRow(showChevron: false)
+                    pickerRowContent
+                        .modifier(ReadOnlyFieldChrome())
+                        .accessibilityAddTraits(.isStaticText)
                 }
             }
 
@@ -179,20 +205,23 @@ struct EmergencyRelationshipPicker: View {
         }
     }
 
-    private func pickerRow(showChevron: Bool) -> some View {
+    private var pickerRowContent: some View {
         HStack {
-            Text(pickerLabel)
+            Text(isEditable ? pickerLabel : readOnlyDisplayLabel)
                 .font(.izadi(.body))
-                .foregroundStyle(IzadiColor.ink)
+                .foregroundStyle(isEditable ? IzadiColor.ink : IzadiColor.inkSoft)
             Spacer()
-            if showChevron {
+            if isEditable {
                 Image(systemName: "chevron.up.chevron.down")
                     .foregroundStyle(IzadiColor.sageSoft)
             }
         }
-        .padding(16)
-        .background(IzadiColor.foam)
-        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+    }
+
+    private var readOnlyDisplayLabel: String {
+        let label = pickerLabel
+        if label == "Select" { return "—" }
+        return label
     }
 
     private var pickerLabel: String {
