@@ -24,6 +24,10 @@ struct ClientSessionsView: View {
                         .tracking(2.2)
                         .foregroundStyle(IzadiColor.sageSoft)
 
+                    PrimaryButton(title: "Book new session") {
+                        path.append(AppRoute.bookSession(client.id))
+                    }
+
                     SegmentedTabs(tabs: ["Upcoming", "Past"], selected: $tab)
 
                     ScrollView {
@@ -33,7 +37,7 @@ struct ClientSessionsView: View {
                                 EmptyStateText(
                                     title: tab == 0 ? "No upcoming sessions" : "No past sessions",
                                     subtitle: tab == 0
-                                        ? "Book a session from the Sessions screen."
+                                        ? "Book a new session for this client above."
                                         : "Completed and cancelled sessions will show here."
                                 )
                             } else {
