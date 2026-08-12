@@ -11,6 +11,7 @@ struct NewClientView: View {
     @State private var emergencyContactName = ""
     @State private var emergencyContactNumber = ""
     @State private var relationship: EmergencyRelationship?
+    @State private var relationshipCustom = ""
     @State private var createdClient: Client?
     @State private var showBookPrompt = false
 
@@ -47,7 +48,10 @@ struct NewClientView: View {
                         FoamField(title: "Emergency contact", text: $emergencyContactName, autocapitalization: .words)
                         FoamField(title: "Emergency number", text: $emergencyContactNumber, keyboard: .phonePad)
 
-                        relationshipPicker
+                        EmergencyRelationshipPicker(
+                            relationship: $relationship,
+                            relationshipCustom: $relationshipCustom
+                        )
 
                         PrimaryButton(title: "Save client", enabled: canSave, action: save)
                             .padding(.top, 8)
@@ -75,34 +79,6 @@ struct NewClientView: View {
         }
     }
 
-    private var relationshipPicker: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("EMERGENCY CONTACT RELATIONSHIP")
-                .font(.izadi(.label))
-                .tracking(2.2)
-                .foregroundStyle(IzadiColor.sageSoft)
-
-            Menu {
-                Button("None") { relationship = nil }
-                ForEach(EmergencyRelationship.allCases) { item in
-                    Button(item.label) { relationship = item }
-                }
-            } label: {
-                HStack {
-                    Text(relationship?.label ?? "Select")
-                        .font(.izadi(.body))
-                        .foregroundStyle(IzadiColor.ink)
-                    Spacer()
-                    Image(systemName: "chevron.up.chevron.down")
-                        .foregroundStyle(IzadiColor.sageSoft)
-                }
-                .padding(16)
-                .background(IzadiColor.foam)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            }
-        }
-    }
-
     private func save() {
         let client = Client(
             firstName: firstName.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -112,6 +88,7 @@ struct NewClientView: View {
             emergencyContactName: emergencyContactName.trimmingCharacters(in: .whitespacesAndNewlines),
             emergencyContactNumber: emergencyContactNumber.trimmingCharacters(in: .whitespacesAndNewlines),
             relationship: relationship,
+            relationshipCustom: relationshipCustom.trimmingCharacters(in: .whitespacesAndNewlines),
             isActive: true
         )
         store.addClient(client)

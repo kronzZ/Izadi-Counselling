@@ -52,7 +52,10 @@ struct ClientDetailView: View {
                         FoamField(title: "Emergency contact", text: binding(\.emergencyContactName), autocapitalization: .words)
                         FoamField(title: "Emergency number", text: binding(\.emergencyContactNumber), keyboard: .phonePad)
 
-                        relationshipPicker
+                        EmergencyRelationshipPicker(
+                            relationship: binding(\.relationship),
+                            relationshipCustom: binding(\.relationshipCustom)
+                        )
 
                         PrimaryButton(title: "View sessions") {
                             path.append(AppRoute.clientSessions(draft.id))
@@ -92,35 +95,14 @@ struct ClientDetailView: View {
         }
     }
 
-    private var relationshipPicker: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("EMERGENCY CONTACT RELATIONSHIP")
-                .font(.izadi(.label))
-                .tracking(2.2)
-                .foregroundStyle(IzadiColor.sageSoft)
-
-            Menu {
-                Button("None") { draft.relationship = nil }
-                ForEach(EmergencyRelationship.allCases) { item in
-                    Button(item.label) { draft.relationship = item }
-                }
-            } label: {
-                HStack {
-                    Text(draft.relationship?.label ?? "Select")
-                        .font(.izadi(.body))
-                        .foregroundStyle(IzadiColor.ink)
-                    Spacer()
-                    Image(systemName: "chevron.up.chevron.down")
-                        .foregroundStyle(IzadiColor.sageSoft)
-                }
-                .padding(16)
-                .background(IzadiColor.foam)
-                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            }
-        }
+    private func binding(_ keyPath: WritableKeyPath<Client, String>) -> Binding<String> {
+        Binding(
+            get: { draft[keyPath: keyPath] },
+            set: { draft[keyPath: keyPath] = $0 }
+        )
     }
 
-    private func binding(_ keyPath: WritableKeyPath<Client, String>) -> Binding<String> {
+    private func binding(_ keyPath: WritableKeyPath<Client, EmergencyRelationship?>) -> Binding<EmergencyRelationship?> {
         Binding(
             get: { draft[keyPath: keyPath] },
             set: { draft[keyPath: keyPath] = $0 }

@@ -22,6 +22,26 @@ enum EmergencyRelationship: String, Codable, CaseIterable, Identifiable {
         if let match = EmergencyRelationship(rawValue: value) { return match }
         return allCases.first { $0.label == value || $0.rawValue == value }
     }
+
+    /// Reads `relationship` + optional `relationshipCustom` from Firestore.
+    static func parseStored(
+        relationship: String?,
+        relationshipCustom: String
+    ) -> (EmergencyRelationship?, String) {
+        if let relationship, let match = fromStored(relationship) {
+            if match == .other {
+                return (.other, relationshipCustom)
+            }
+            return (match, "")
+        }
+
+        // Legacy: free-text relationship stored in `relationship` alone.
+        if let relationship, !relationship.isEmpty {
+            return (.other, relationship)
+        }
+
+        return (nil, "")
+    }
 }
 
 struct Client: Identifiable, Equatable, Hashable {
@@ -33,10 +53,21 @@ struct Client: Identifiable, Equatable, Hashable {
     var emergencyContactName: String
     var emergencyContactNumber: String
     var relationship: EmergencyRelationship?
+    /// Free text when `relationship` is `.other`.
+    var relationshipCustom: String
     var isActive: Bool
     var createdAtEpochMs: Int64
 
     var fullName: String { "\(firstName) \(surname)" }
+
+    var relationshipDisplayLabel: String? {
+        guard let relationship else { return nil }
+        if relationship == .other {
+            let trimmed = relationshipCustom.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? relationship.label : trimmed
+        }
+        return relationship.label
+    }
 
     init(
         id: String = UUID().uuidString,
@@ -47,6 +78,7 @@ struct Client: Identifiable, Equatable, Hashable {
         emergencyContactName: String = "",
         emergencyContactNumber: String = "",
         relationship: EmergencyRelationship? = nil,
+        relationshipCustom: String = "",
         isActive: Bool = true,
         createdAtEpochMs: Int64 = Int64(Date().timeIntervalSince1970 * 1000)
     ) {
@@ -58,6 +90,7 @@ struct Client: Identifiable, Equatable, Hashable {
         self.emergencyContactName = emergencyContactName
         self.emergencyContactNumber = emergencyContactNumber
         self.relationship = relationship
+        self.relationshipCustom = relationshipCustom
         self.isActive = isActive
         self.createdAtEpochMs = createdAtEpochMs
     }

@@ -40,7 +40,12 @@ enum FirestoreMapping {
         else { return nil }
 
         let relationshipRaw = data["relationship"] as? String
-        let relationship = EmergencyRelationship.fromStored(relationshipRaw)
+        let relationshipCustomRaw = (data["relationshipCustom"] as? String ?? "")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let (relationship, relationshipCustom) = EmergencyRelationship.parseStored(
+            relationship: relationshipRaw,
+            relationshipCustom: relationshipCustomRaw
+        )
 
         return Client(
             id: id,
@@ -51,6 +56,7 @@ enum FirestoreMapping {
             emergencyContactName: data["emergencyContactName"] as? String ?? "",
             emergencyContactNumber: data["emergencyContactNumber"] as? String ?? "",
             relationship: relationship,
+            relationshipCustom: relationshipCustom,
             isActive: data["isActive"] as? Bool ?? true,
             createdAtEpochMs: (data["createdAtEpochMs"] as? NSNumber)?.int64Value
                 ?? Int64(Date().timeIntervalSince1970 * 1000)
@@ -66,6 +72,9 @@ enum FirestoreMapping {
             "emergencyContactName": client.emergencyContactName,
             "emergencyContactNumber": client.emergencyContactNumber,
             "relationship": client.relationship?.rawValue as Any,
+            "relationshipCustom": client.relationship == .other
+                ? client.relationshipCustom.trimmingCharacters(in: .whitespacesAndNewlines)
+                : "",
             "isActive": client.isActive,
             "createdAtEpochMs": client.createdAtEpochMs,
         ]

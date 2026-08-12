@@ -86,6 +86,64 @@ struct FoamField: View {
     }
 }
 
+struct EmergencyRelationshipPicker: View {
+    @Binding var relationship: EmergencyRelationship?
+    @Binding var relationshipCustom: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("EMERGENCY CONTACT RELATIONSHIP")
+                .font(.izadi(.label))
+                .tracking(2.2)
+                .foregroundStyle(IzadiColor.sageSoft)
+
+            Menu {
+                Button("None") {
+                    relationship = nil
+                    relationshipCustom = ""
+                }
+                ForEach(EmergencyRelationship.allCases) { item in
+                    Button(item.label) {
+                        relationship = item
+                        if item != .other {
+                            relationshipCustom = ""
+                        }
+                    }
+                }
+            } label: {
+                HStack {
+                    Text(pickerLabel)
+                        .font(.izadi(.body))
+                        .foregroundStyle(IzadiColor.ink)
+                    Spacer()
+                    Image(systemName: "chevron.up.chevron.down")
+                        .foregroundStyle(IzadiColor.sageSoft)
+                }
+                .padding(16)
+                .background(IzadiColor.foam)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+
+            if relationship == .other {
+                FoamField(
+                    title: "Specify relationship",
+                    text: $relationshipCustom,
+                    autocapitalization: .words
+                )
+            }
+        }
+    }
+
+    private var pickerLabel: String {
+        guard let relationship else { return "Select" }
+        if relationship == .other {
+            let trimmed = relationshipCustom.trimmingCharacters(in: .whitespacesAndNewlines)
+            return trimmed.isEmpty ? relationship.label : trimmed
+        }
+        return relationship.label
+    }
+}
+
 struct SegmentedTabs: View {
     let tabs: [String]
     @Binding var selected: Int
