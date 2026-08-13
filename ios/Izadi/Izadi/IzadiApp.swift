@@ -51,6 +51,9 @@ struct IzadiApp: App {
                             .environmentObject(CourtesyReminderService.shared)
                             .environmentObject(SquarePaymentCoordinator.shared)
                             .environmentObject(appLock)
+                            // Hide visually while locked so safe-area / scroll changes
+                            // under Face ID can’t shove the home hero sideways.
+                            .opacity(appLock.needsLockScreen ? 0 : 1)
                             .allowsHitTesting(appLock.isUnlocked && !appLock.isPrivacyCovered)
                     } else {
                         AuthView()
@@ -62,7 +65,6 @@ struct IzadiApp: App {
                 if auth.isSignedIn && appLock.needsLockScreen && !showSplash {
                     AppLockView()
                         .environmentObject(appLock)
-                        .transition(.opacity)
                         .zIndex(2)
                 }
 

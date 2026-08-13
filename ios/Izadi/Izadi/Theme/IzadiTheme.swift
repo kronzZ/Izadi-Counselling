@@ -21,7 +21,7 @@ struct SoftScreenBackground<Content: View>: View {
     @ViewBuilder var content: () -> Content
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
+        ZStack {
             Group {
                 if fullMint {
                     IzadiColor.softSky
@@ -33,19 +33,27 @@ struct SoftScreenBackground<Content: View>: View {
                     )
                 }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
 
+            // Full-width top band so the trailing glow can’t drift when Face ID /
+            // privacy cover changes the measured content size of the ZStack.
             RadialGradient(
                 colors: [IzadiColor.sageSoft.opacity(0.20), .clear],
                 center: .topTrailing,
                 startRadius: 20,
                 endRadius: 320
             )
+            .frame(maxWidth: .infinity)
             .frame(height: 300)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .allowsHitTesting(false)
             .ignoresSafeArea()
 
             content()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
 

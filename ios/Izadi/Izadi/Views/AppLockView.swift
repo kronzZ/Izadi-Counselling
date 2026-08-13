@@ -6,69 +6,77 @@ struct AppLockView: View {
 
     var body: some View {
         SoftScreenBackground(fullMint: true) {
-            VStack(spacing: 28) {
-                Spacer()
+            GeometryReader { geo in
+                // Fixed positions (not Spacer-driven) so Face ID / privacy-cover
+                // state changes don’t shove the logo or mint background sideways.
+                ZStack {
+                    VStack(spacing: 0) {
+                        Image("IzadiLogo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 140, height: 140)
+                            .accessibilityHidden(true)
 
-                Image("IzadiLogo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 140, height: 140)
-                    .accessibilityHidden(true)
+                        VStack(spacing: 8) {
+                            Text("Izadi")
+                                .font(.izadi(.display))
+                                .foregroundStyle(IzadiColor.ink)
 
-                VStack(spacing: 8) {
-                    Text("Izadi")
-                        .font(.izadi(.display))
-                        .foregroundStyle(IzadiColor.ink)
+                            Text("Counselling")
+                                .font(.izadi(.title))
+                                .foregroundStyle(IzadiColor.sage)
 
-                    Text("Counselling")
-                        .font(.izadi(.title))
-                        .foregroundStyle(IzadiColor.sage)
-
-                    if !appLock.isUnlocked {
-                        Text("Unlock to open the practice")
-                            .font(.izadi(.body))
-                            .foregroundStyle(IzadiColor.inkSoft)
-                            .multilineTextAlignment(.center)
-                            .padding(.top, 4)
-                    }
-                }
-
-                if let error = appLock.errorMessage {
-                    Text(error)
-                        .font(.izadi(.bodyMedium))
-                        .foregroundStyle(IzadiColor.roseDeep)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 32)
-                }
-
-                if !appLock.isUnlocked {
-                    Button {
-                        Task { await appLock.authenticate() }
-                    } label: {
-                        HStack(spacing: 10) {
-                            Image(systemName: unlockSymbol)
-                                .font(.system(size: 18, weight: .medium))
-                            Text(appLock.isAuthenticating
-                                  ? "Waiting…"
-                                  : "Unlock with \(appLock.biometryLabel)")
-                                .font(.izadi(.boldBody))
+                            Text(appLock.isUnlocked
+                                  ? " "
+                                  : "Unlock to open the practice")
+                                .font(.izadi(.body))
+                                .foregroundStyle(IzadiColor.inkSoft)
+                                .multilineTextAlignment(.center)
+                                .padding(.top, 4)
+                                .opacity(appLock.isUnlocked ? 0 : 1)
                         }
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 16)
-                        .background(IzadiColor.sage)
-                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        .padding(.top, 28)
                     }
-                    .disabled(appLock.isAuthenticating)
-                    .padding(.horizontal, 40)
-                    .padding(.top, 8)
-                }
+                    .frame(maxWidth: .infinity)
+                    .position(x: geo.size.width / 2, y: geo.size.height * 0.38)
 
-                Spacer()
-                Spacer()
+                    VStack(spacing: 12) {
+                        Text(appLock.errorMessage ?? " ")
+                            .font(.izadi(.bodyMedium))
+                            .foregroundStyle(IzadiColor.roseDeep)
+                            .multilineTextAlignment(.center)
+                            .opacity(appLock.errorMessage == nil ? 0 : 1)
+                            .frame(minHeight: 40)
+
+                        Button {
+                            Task { await appLock.authenticate() }
+                        } label: {
+                            HStack(spacing: 10) {
+                                Image(systemName: unlockSymbol)
+                                    .font(.system(size: 18, weight: .medium))
+                                Text(appLock.isAuthenticating
+                                      ? "Waiting…"
+                                      : "Unlock with \(appLock.biometryLabel)")
+                                    .font(.izadi(.boldBody))
+                            }
+                            .foregroundStyle(.white)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 16)
+                            .background(IzadiColor.sage)
+                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        }
+                        .disabled(appLock.isAuthenticating || appLock.isUnlocked)
+                        .opacity(appLock.isUnlocked ? 0 : 1)
+                        .allowsHitTesting(!appLock.isUnlocked)
+                    }
+                    .padding(.horizontal, 40)
+                    .frame(maxWidth: .infinity)
+                    .position(x: geo.size.width / 2, y: geo.size.height * 0.72)
+                }
+                .frame(width: geo.size.width, height: geo.size.height)
             }
-            .padding(.horizontal, 24)
         }
+        .ignoresSafeArea()
     }
 
     private var unlockSymbol: String {
