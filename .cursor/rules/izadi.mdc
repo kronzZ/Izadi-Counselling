@@ -1,0 +1,24 @@
+---
+description: Izadi Counselling iOS practice app — product and engineering conventions
+alwaysApply: true
+---
+
+# Izadi Counselling
+
+SwiftUI iOS app at `ios/Izadi/`. Firebase Auth + Firestore. Bundle ID `com.turtletech.izadicounselling`.
+
+## Do
+
+- Match existing Izadi UI (sage/foam/butter, Outfit fonts, SoftScreenBackground).
+- Keep HomeView mounted behind Face ID; overlay only.
+- Courtesy SMS: local notifications from T-2 9am–5pm every 2h; include exact 3h-before ping; stop after Mark as complete or cutoff. Wrap-up highlight wins over courtesy SMS.
+- Bump `CURRENT_PROJECT_VERSION` only when uploading to TestFlight, never on every small change. Version stays 1.1 until a new user-facing release. Next upload after 1.1 (6) is build 7+.
+- Info.plist version/build must stay `$(MARKETING_VERSION)` and `$(CURRENT_PROJECT_VERSION)`.
+
+## Don’t
+
+- Don’t auto-send SMS; always open Messages with a prefilled body.
+- Don’t reset build numbers downward (App Store Connect rejects).
+- Don’t treat `GoogleService-Info.plist` as commitable real secrets from this cloud copy; the Mac has the real file.
+- Don’t unmount HomeView to lock the app.
+- Don’t add a home “what’s next” task list unless asked (that work was reverted).

@@ -90,6 +90,7 @@ fun HomeScreen(
     onOpenSessions: () -> Unit,
     onOpenPayments: () -> Unit,
     onOpenSession: (Session) -> Unit,
+    onSignOut: () -> Unit = {},
 ) {
     val context = LocalContext.current
     var showHero by remember { mutableStateOf(false) }
@@ -150,6 +151,13 @@ fun HomeScreen(
                                 letterSpacing = 0.4.sp,
                             ),
                         )
+                        TextButton(onClick = onSignOut) {
+                            Text(
+                                text = "Sign out",
+                                style = MaterialTheme.typography.labelLarge,
+                                color = IzadiInkSoft,
+                            )
+                        }
                     }
 
                     Image(

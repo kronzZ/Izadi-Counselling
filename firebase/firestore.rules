@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Solo practice: each signed-in counselor owns practices/{theirUid}.
+    function isOwner(practiceId) {
+      return request.auth != null && request.auth.uid == practiceId;
+    }
+
+    match /practices/{practiceId} {
+      allow read, write: if isOwner(practiceId);
+
+      match /clients/{clientId} {
+        allow read, write: if isOwner(practiceId);
+      }
+
+      match /sessions/{sessionId} {
+        allow read, write: if isOwner(practiceId);
+      }
+    }
+  }
+}

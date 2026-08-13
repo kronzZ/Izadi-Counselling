@@ -9,5 +9,5 @@ package com.practice.app.payments
  * - SHA-1 fingerprint of your debug/release keystore
  */
 object SquareConfig {
-    const val APPLICATION_ID = "sq0idp-f1wy8hZaRNEuvqGnb-yFnw"
+    const val APPLICATION_ID = "sq0idp-urZsWABGSBP75wz3nbpMvw"
 }

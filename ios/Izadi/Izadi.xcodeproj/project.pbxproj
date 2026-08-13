@@ -1,0 +1,456 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DA11049BA31E4194AA3162FA /* IzadiApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0AA2FA4D55F424495A4B4AB /* IzadiApp.swift */; };
+		C325C278B69448F4BC38AA0C /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87656E37F92E40BFAC0787E9 /* Client.swift */; };
+		601DA34E156F49FFA3F05F5F /* DailyQuotes.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8358FE5A65842FDB5B00B0C /* DailyQuotes.swift */; };
+		816E51A9F5EB4759A128F33E /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = E246796D134248F392590EDD /* Session.swift */; };
+		BFFC2F7C776F4F8899EACB59 /* WelcomeSms.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47B066850A04AEEA2C41018 /* WelcomeSms.swift */; };
+		C8630B5D0C7F464C8E69162F /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA23A1B3D598480BBE9C56E3 /* AuthService.swift */; };
+		42CAC870FA764299804A7F5F /* FirestoreRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24EF5D45754471BB4ECF81C /* FirestoreRepository.swift */; };
+		780F8337B9DF48F6B61F8970 /* PracticeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8154D32BBDC04A6E83E21DA5 /* PracticeStore.swift */; };
+		2A7BD341FB2F436FA9035EDB /* SquareConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45755DE18DC49DF9473D480 /* SquareConfig.swift */; };
+		058A374C2AE844A384DBD0E1 /* IzadiTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3068C8EB763047CA9785974F /* IzadiTheme.swift */; };
+		089A22211C89467588A08647 /* BookSessionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */; };
+		EF1C183F3A9A4C3C802CCA52 /* ClientDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97F922B8A4384D6EAC45361A /* ClientDetailView.swift */; };
+		0055F2249C624366B94F42F9 /* ClientSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C534AAA49EB646E39BE27647 /* ClientSessionsView.swift */; };
+		2DC0F17A27114571A3DBB6AF /* ClientsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5748AF2EF21F4FF88EBF5678 /* ClientsView.swift */; };
+		D780D9A921F54BE5A901DE61 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 470CB1E84B76489599C95589 /* Components.swift */; };
+		34BC77B946B748A7A2D7E10E /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F5035FD23C6494FA444A249 /* HomeView.swift */; };
+		E56A7A0BE76E4B7385245B50 /* ManageSessionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F78054FDF100432C85A67D9D /* ManageSessionsView.swift */; };
+		6CB762EE16174A3691B84E33 /* NewClientView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBAF47AC08CF4F5F81596C14 /* NewClientView.swift */; };
+		6F676EBC19404EF0908D497E /* PaymentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FF2FA39B5C49E697948C0B /* PaymentsView.swift */; };
+		7E4D8740F4794D2CB9314556 /* SessionDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB90922202C1456787B987CE /* SessionDetailView.swift */; };
+		8F14ABBBD1ED48AF8E80DA59 /* SplashView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC4E5A4E735B44EA8C92B1EE /* SplashView.swift */; };
+		30DFA61BCC674468B5A3A315 /* WelcomeSmsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1670C4A93FC3491F8CE4E92D /* WelcomeSmsSheet.swift */; };
+		C461CE0D43A94A17A21C96D5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A18756C101F54FB0B87C4923 /* Assets.xcassets */; };
+		98F5838F320B4934B3F6B325 /* Outfit-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C27171F0DDD43C7BFEC1C46 /* Outfit-Bold.ttf */; };
+		9F067619B40145FD98C19C40 /* Outfit-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B11B6E4B945D42D8907E4D2A /* Outfit-ExtraLight.ttf */; };
+		11ABDD9B377F43FCA4E88E03 /* Outfit-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 869FB681683D4074B2E9EF60 /* Outfit-Light.ttf */; };
+		A7E6099CFDC041ECBFF01655 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = FD67CC07853444A6951B9A0F /* FirebaseAuth */; };
+		2E58C63D05C74348BFAF0058 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = DCACA48070CE494BBD3AE695 /* FirebaseFirestore */; };
+		01132961CD064335A24CBC96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 873336089F754179B9F1EE9D /* GoogleService-Info.plist */; };
+		572AC062675B4284BAEF4FF2 /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15860CD5163B4619B301F7E6 /* AuthView.swift */; };
+		6AD7CEB34DF8472797360FAA /* SquarePaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */; };
+		1CD15DD77C094D8F925DEDC8 /* SquarePointOfSaleSDK in Frameworks */ = {isa = PBXBuildFile; productRef = DA8C1567441F4755B430CEED /* SquarePointOfSaleSDK */; };
+		A1B2C3D4E5F60718293A4B5C /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */; };
+		C3D4E5F60718293A4B5C6D7E /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */; };
+		E4F5A60718293A4B5C6D7E8F /* CourtesySms.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A60718293A4B5C6D7E8F90 /* CourtesySms.swift */; };
+		E5A60718293A4B5C6D7E8F91 /* CourtesyReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A60718293A4B5C6D7E8F92 /* CourtesyReminderService.swift */; };
+		E6A60718293A4B5C6D7E8F93 /* CourtesySmsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A60718293A4B5C6D7E8F94 /* CourtesySmsSheet.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		BAADB19A3E75491FB1AFEEAC /* Izadi Counselling.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Izadi Counselling.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0AA2FA4D55F424495A4B4AB /* IzadiApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IzadiApp.swift; sourceTree = "<group>"; };
+		87656E37F92E40BFAC0787E9 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
+		E8358FE5A65842FDB5B00B0C /* DailyQuotes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyQuotes.swift; sourceTree = "<group>"; };
+		E246796D134248F392590EDD /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
+		B47B066850A04AEEA2C41018 /* WelcomeSms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeSms.swift; sourceTree = "<group>"; };
+		FA23A1B3D598480BBE9C56E3 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		E24EF5D45754471BB4ECF81C /* FirestoreRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirestoreRepository.swift; sourceTree = "<group>"; };
+		8154D32BBDC04A6E83E21DA5 /* PracticeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PracticeStore.swift; sourceTree = "<group>"; };
+		F45755DE18DC49DF9473D480 /* SquareConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquareConfig.swift; sourceTree = "<group>"; };
+		3068C8EB763047CA9785974F /* IzadiTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IzadiTheme.swift; sourceTree = "<group>"; };
+		AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookSessionView.swift; sourceTree = "<group>"; };
+		97F922B8A4384D6EAC45361A /* ClientDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientDetailView.swift; sourceTree = "<group>"; };
+		C534AAA49EB646E39BE27647 /* ClientSessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSessionsView.swift; sourceTree = "<group>"; };
+		5748AF2EF21F4FF88EBF5678 /* ClientsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientsView.swift; sourceTree = "<group>"; };
+		470CB1E84B76489599C95589 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		2F5035FD23C6494FA444A249 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		F78054FDF100432C85A67D9D /* ManageSessionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageSessionsView.swift; sourceTree = "<group>"; };
+		DBAF47AC08CF4F5F81596C14 /* NewClientView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewClientView.swift; sourceTree = "<group>"; };
+		92FF2FA39B5C49E697948C0B /* PaymentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentsView.swift; sourceTree = "<group>"; };
+		AB90922202C1456787B987CE /* SessionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDetailView.swift; sourceTree = "<group>"; };
+		BC4E5A4E735B44EA8C92B1EE /* SplashView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashView.swift; sourceTree = "<group>"; };
+		1670C4A93FC3491F8CE4E92D /* WelcomeSmsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeSmsSheet.swift; sourceTree = "<group>"; };
+		A18756C101F54FB0B87C4923 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8C27171F0DDD43C7BFEC1C46 /* Outfit-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Outfit-Bold.ttf; sourceTree = "<group>"; };
+		B11B6E4B945D42D8907E4D2A /* Outfit-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Outfit-ExtraLight.ttf; sourceTree = "<group>"; };
+		869FB681683D4074B2E9EF60 /* Outfit-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Outfit-Light.ttf; sourceTree = "<group>"; };
+		CA1182A35CA84AE58A94136F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		873336089F754179B9F1EE9D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		15860CD5163B4619B301F7E6 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquarePaymentCoordinator.swift; sourceTree = "<group>"; };
+		B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockService.swift; sourceTree = "<group>"; };
+		D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockView.swift; sourceTree = "<group>"; };
+		F5A60718293A4B5C6D7E8F90 /* CourtesySms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtesySms.swift; sourceTree = "<group>"; };
+		F6A60718293A4B5C6D7E8F92 /* CourtesyReminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtesyReminderService.swift; sourceTree = "<group>"; };
+		F7A60718293A4B5C6D7E8F94 /* CourtesySmsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtesySmsSheet.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1663AC48562D4A25968016AF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1CD15DD77C094D8F925DEDC8 /* SquarePointOfSaleSDK in Frameworks */,
+				A7E6099CFDC041ECBFF01655 /* FirebaseAuth in Frameworks */,
+				2E58C63D05C74348BFAF0058 /* FirebaseFirestore in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		4F59267C5A9E45D18A060B29 = {
+			isa = PBXGroup;
+			children = (
+				FAB34F0AFFD44CCB82666F3D /* Izadi */,
+				11951BC6573242C2A4C6B80E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		11951BC6573242C2A4C6B80E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BAADB19A3E75491FB1AFEEAC /* Izadi Counselling.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FAB34F0AFFD44CCB82666F3D /* Izadi */ = {
+			isa = PBXGroup;
+			children = (
+				873336089F754179B9F1EE9D /* GoogleService-Info.plist */,
+				C0AA2FA4D55F424495A4B4AB /* IzadiApp.swift */,
+				CA1182A35CA84AE58A94136F /* Info.plist */,
+				A98123FB43F94792A80A22E5 /* Models */,
+				A9F8CE0B2867476D9E7819F7 /* Services */,
+				7C194F045C4641F7AD5549AA /* Theme */,
+				92B2A59DECB14A6393D65E09 /* Views */,
+				6DDE2166F4C34763A72C75D0 /* Resources */,
+			);
+			path = Izadi;
+			sourceTree = "<group>";
+		};
+		A98123FB43F94792A80A22E5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				87656E37F92E40BFAC0787E9 /* Client.swift */,
+				E8358FE5A65842FDB5B00B0C /* DailyQuotes.swift */,
+				E246796D134248F392590EDD /* Session.swift */,
+				F5A60718293A4B5C6D7E8F90 /* CourtesySms.swift */,
+				B47B066850A04AEEA2C41018 /* WelcomeSms.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A9F8CE0B2867476D9E7819F7 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */,
+				B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */,
+				FA23A1B3D598480BBE9C56E3 /* AuthService.swift */,
+				F6A60718293A4B5C6D7E8F92 /* CourtesyReminderService.swift */,
+				E24EF5D45754471BB4ECF81C /* FirestoreRepository.swift */,
+				8154D32BBDC04A6E83E21DA5 /* PracticeStore.swift */,
+				F45755DE18DC49DF9473D480 /* SquareConfig.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		7C194F045C4641F7AD5549AA /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				3068C8EB763047CA9785974F /* IzadiTheme.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		92B2A59DECB14A6393D65E09 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */,
+				15860CD5163B4619B301F7E6 /* AuthView.swift */,
+				F7A60718293A4B5C6D7E8F94 /* CourtesySmsSheet.swift */,
+				AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */,
+				97F922B8A4384D6EAC45361A /* ClientDetailView.swift */,
+				C534AAA49EB646E39BE27647 /* ClientSessionsView.swift */,
+				5748AF2EF21F4FF88EBF5678 /* ClientsView.swift */,
+				470CB1E84B76489599C95589 /* Components.swift */,
+				2F5035FD23C6494FA444A249 /* HomeView.swift */,
+				F78054FDF100432C85A67D9D /* ManageSessionsView.swift */,
+				DBAF47AC08CF4F5F81596C14 /* NewClientView.swift */,
+				92FF2FA39B5C49E697948C0B /* PaymentsView.swift */,
+				AB90922202C1456787B987CE /* SessionDetailView.swift */,
+				BC4E5A4E735B44EA8C92B1EE /* SplashView.swift */,
+				1670C4A93FC3491F8CE4E92D /* WelcomeSmsSheet.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		6DDE2166F4C34763A72C75D0 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A18756C101F54FB0B87C4923 /* Assets.xcassets */,
+				D5D06AFE7A8C4E97AFF2B59D /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		D5D06AFE7A8C4E97AFF2B59D /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				8C27171F0DDD43C7BFEC1C46 /* Outfit-Bold.ttf */,
+				B11B6E4B945D42D8907E4D2A /* Outfit-ExtraLight.ttf */,
+				869FB681683D4074B2E9EF60 /* Outfit-Light.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D5829E8D6C434D32936E897C /* Izadi */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6FD1C43F5BB844669724AC68 /* Build configuration list for PBXNativeTarget "Izadi" */;
+			buildPhases = (
+				E78B037DFFFD4A1595B448BE /* Sources */,
+				1663AC48562D4A25968016AF /* Frameworks */,
+				DBC24F9510634C8D99FE9D21 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Izadi;
+			packageProductDependencies = (
+				DA8C1567441F4755B430CEED /* SquarePointOfSaleSDK */,
+				FD67CC07853444A6951B9A0F /* FirebaseAuth */,
+				DCACA48070CE494BBD3AE695 /* FirebaseFirestore */,
+			);
+			productName = "Izadi Counselling";
+			productReference = BAADB19A3E75491FB1AFEEAC /* Izadi Counselling.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		17417FE37C45465EAB5E3261 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+			};
+			buildConfigurationList = 887A1DEEA70341FDB5199DFD /* Build configuration list for PBXProject "Izadi" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 4F59267C5A9E45D18A060B29;
+			packageReferences = (
+				39EE178E5F3342B0970F3EFD /* XCRemoteSwiftPackageReference "SquarePointOfSaleSDK-iOS" */,
+				A9803CB2B7E8470592600A98 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
+			productRefGroup = 11951BC6573242C2A4C6B80E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D5829E8D6C434D32936E897C /* Izadi */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DBC24F9510634C8D99FE9D21 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01132961CD064335A24CBC96 /* GoogleService-Info.plist in Resources */,
+				C461CE0D43A94A17A21C96D5 /* Assets.xcassets in Resources */,
+				98F5838F320B4934B3F6B325 /* Outfit-Bold.ttf in Resources */,
+				9F067619B40145FD98C19C40 /* Outfit-ExtraLight.ttf in Resources */,
+				11ABDD9B377F43FCA4E88E03 /* Outfit-Light.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		E78B037DFFFD4A1595B448BE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AD7CEB34DF8472797360FAA /* SquarePaymentCoordinator.swift in Sources */,
+				A1B2C3D4E5F60718293A4B5C /* AppLockService.swift in Sources */,
+				C3D4E5F60718293A4B5C6D7E /* AppLockView.swift in Sources */,
+				572AC062675B4284BAEF4FF2 /* AuthView.swift in Sources */,
+				DA11049BA31E4194AA3162FA /* IzadiApp.swift in Sources */,
+				C325C278B69448F4BC38AA0C /* Client.swift in Sources */,
+				601DA34E156F49FFA3F05F5F /* DailyQuotes.swift in Sources */,
+				816E51A9F5EB4759A128F33E /* Session.swift in Sources */,
+				E4F5A60718293A4B5C6D7E8F /* CourtesySms.swift in Sources */,
+				BFFC2F7C776F4F8899EACB59 /* WelcomeSms.swift in Sources */,
+				C8630B5D0C7F464C8E69162F /* AuthService.swift in Sources */,
+				E5A60718293A4B5C6D7E8F91 /* CourtesyReminderService.swift in Sources */,
+				42CAC870FA764299804A7F5F /* FirestoreRepository.swift in Sources */,
+				780F8337B9DF48F6B61F8970 /* PracticeStore.swift in Sources */,
+				E6A60718293A4B5C6D7E8F93 /* CourtesySmsSheet.swift in Sources */,
+				2A7BD341FB2F436FA9035EDB /* SquareConfig.swift in Sources */,
+				058A374C2AE844A384DBD0E1 /* IzadiTheme.swift in Sources */,
+				089A22211C89467588A08647 /* BookSessionView.swift in Sources */,
+				EF1C183F3A9A4C3C802CCA52 /* ClientDetailView.swift in Sources */,
+				0055F2249C624366B94F42F9 /* ClientSessionsView.swift in Sources */,
+				2DC0F17A27114571A3DBB6AF /* ClientsView.swift in Sources */,
+				D780D9A921F54BE5A901DE61 /* Components.swift in Sources */,
+				34BC77B946B748A7A2D7E10E /* HomeView.swift in Sources */,
+				E56A7A0BE76E4B7385245B50 /* ManageSessionsView.swift in Sources */,
+				6CB762EE16174A3691B84E33 /* NewClientView.swift in Sources */,
+				6F676EBC19404EF0908D497E /* PaymentsView.swift in Sources */,
+				7E4D8740F4794D2CB9314556 /* SessionDetailView.swift in Sources */,
+				8F14ABBBD1ED48AF8E80DA59 /* SplashView.swift in Sources */,
+				30DFA61BCC674468B5A3A315 /* WelcomeSmsSheet.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DCE6D75DE4949918D26A93A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		35241AA876EA457681A3E601 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7972A9E267884D36B090CCE8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Izadi/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.turtletech.izadicounselling;
+				PRODUCT_NAME = "Izadi Counselling";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A4483BC7C11441B4AF8A2281 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 6;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Izadi/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.turtletech.izadicounselling;
+				PRODUCT_NAME = "Izadi Counselling";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		887A1DEEA70341FDB5199DFD /* Build configuration list for PBXProject "Izadi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DCE6D75DE4949918D26A93A /* Debug */,
+				35241AA876EA457681A3E601 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6FD1C43F5BB844669724AC68 /* Build configuration list for PBXNativeTarget "Izadi" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7972A9E267884D36B090CCE8 /* Debug */,
+				A4483BC7C11441B4AF8A2281 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A9803CB2B7E8470592600A98 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
+		39EE178E5F3342B0970F3EFD /* XCRemoteSwiftPackageReference "SquarePointOfSaleSDK-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/square/SquarePointOfSaleSDK-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.5.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		FD67CC07853444A6951B9A0F /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9803CB2B7E8470592600A98 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		DCACA48070CE494BBD3AE695 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A9803CB2B7E8470592600A98 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		DA8C1567441F4755B430CEED /* SquarePointOfSaleSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39EE178E5F3342B0970F3EFD /* XCRemoteSwiftPackageReference "SquarePointOfSaleSDK-iOS" */;
+			productName = SquarePointOfSaleSDK;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 17417FE37C45465EAB5E3261 /* Project object */;
+}
