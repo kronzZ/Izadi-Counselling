@@ -11,6 +11,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             FirebaseApp.configure()
         }
         SquarePaymentCoordinator.shared.configureIfNeeded()
+        CourtesyReminderService.shared.configure()
         return true
     }
 
@@ -47,6 +48,7 @@ struct IzadiApp: App {
                         // survive multitasking (Face ID only overlays, does not remount).
                         HomeView()
                             .environmentObject(store)
+                            .environmentObject(CourtesyReminderService.shared)
                             .environmentObject(SquarePaymentCoordinator.shared)
                             .environmentObject(appLock)
                             .allowsHitTesting(appLock.isUnlocked && !appLock.isPrivacyCovered)
@@ -87,6 +89,14 @@ struct IzadiApp: App {
                     store.start(uid: uid)
                 } else {
                     store.stop()
+                    Task { await CourtesyReminderService.shared.cancelAll() }
+                }
+            }
+            .onChange(of: store.sessions) { _, sessions in
+                guard auth.isSignedIn else { return }
+                Task {
+                    await CourtesyReminderService.shared.requestAuthorizationIfNeeded()
+                    await CourtesyReminderService.shared.sync(sessions: sessions)
                 }
             }
             .onChange(of: auth.isSignedIn) { _, signedIn in
@@ -94,6 +104,10 @@ struct IzadiApp: App {
                     appLock.lock()
                     if !showSplash {
                         Task { await appLock.authenticate() }
+                    }
+                    Task {
+                        await CourtesyReminderService.shared.requestAuthorizationIfNeeded()
+                        await CourtesyReminderService.shared.sync(sessions: store.sessions)
                     }
                 } else {
                     appLock.clearForSignedOut()

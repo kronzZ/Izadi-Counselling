@@ -6,6 +6,7 @@ final class PracticeStore: ObservableObject {
     @Published private(set) var clients: [Client] = []
     @Published private(set) var sessions: [Session] = []
     @Published private(set) var welcomeSmsTemplate: String = WelcomeSms.defaultTemplate
+    @Published private(set) var courtesySmsTemplate: String = CourtesySms.defaultTemplate
     @Published private(set) var isLoading = false
     @Published var highlightClientId: String?
     @Published var errorMessage: String?
@@ -44,6 +45,7 @@ final class PracticeStore: ObservableObject {
             onSettings: { [weak self] settings in
                 Task { @MainActor in
                     self?.welcomeSmsTemplate = settings.welcomeSmsTemplate
+                    self?.courtesySmsTemplate = settings.courtesySmsTemplate
                 }
             },
             onError: { [weak self] error in
@@ -61,6 +63,7 @@ final class PracticeStore: ObservableObject {
         clients = []
         sessions = []
         welcomeSmsTemplate = WelcomeSms.defaultTemplate
+        courtesySmsTemplate = CourtesySms.defaultTemplate
         highlightClientId = nil
     }
 
@@ -163,6 +166,27 @@ final class PracticeStore: ObservableObject {
                 errorMessage = error.localizedDescription
             }
         }
+    }
+
+    func updateCourtesySmsTemplate(_ template: String) {
+        guard let uid else { return }
+        let saved = template.trimmingCharacters(in: .whitespacesAndNewlines)
+        courtesySmsTemplate = saved.isEmpty ? CourtesySms.defaultTemplate : saved
+        Task {
+            do {
+                try await repository.updateCourtesySmsTemplate(uid: uid, template: courtesySmsTemplate)
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    func markCourtesySmsComplete(sessionId: String) {
+        guard let index = sessions.firstIndex(where: { $0.id == sessionId }) else { return }
+        var updated = sessions[index]
+        guard !updated.courtesySmsCompleted else { return }
+        updated.courtesySmsCompleted = true
+        updateSession(updated)
     }
 
     func clearHighlightClientId() {

@@ -2,12 +2,14 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject private var store: PracticeStore
+    @EnvironmentObject private var courtesyReminders: CourtesyReminderService
 
     @State private var showHero = false
     @State private var showNav = false
     @State private var showWelcomeSms = false
     @State private var now = Date()
     @State private var path = NavigationPath()
+    @State private var courtesySessionId: String?
 
     private let clock = Timer.publish(every: 30, on: .main, in: .common).autoconnect()
 
@@ -118,6 +120,18 @@ struct HomeView: View {
                     onTemplateChange: store.updateWelcomeSmsTemplate
                 )
             }
+            .sheet(item: courtesySessionBinding) { session in
+                CourtesySmsSheet(
+                    session: session,
+                    client: store.clients.first(where: { $0.id == session.clientId }),
+                    template: store.courtesySmsTemplate,
+                    onTemplateChange: store.updateCourtesySmsTemplate,
+                    onMarkComplete: {
+                        store.markCourtesySmsComplete(sessionId: session.id)
+                        courtesyReminders.clearActionSession()
+                    }
+                )
+            }
         }
         .onAppear {
             // Entrance animation only once per HomeView lifetime (not after Face ID unlock).
@@ -128,6 +142,25 @@ struct HomeView: View {
             }
         }
         .onReceive(clock) { now = $0 }
+        .onChange(of: courtesyReminders.actionSessionId) { _, sessionId in
+            guard let sessionId else { return }
+            courtesySessionId = sessionId
+        }
+    }
+
+    private var courtesySessionBinding: Binding<Session?> {
+        Binding(
+            get: {
+                guard let id = courtesySessionId else { return nil }
+                return store.sessions.first(where: { $0.id == id })
+            },
+            set: { newValue in
+                courtesySessionId = newValue?.id
+                if newValue == nil {
+                    courtesyReminders.clearActionSession()
+                }
+            }
+        )
     }
 
     private var upcomingPanel: some View {
@@ -152,38 +185,7 @@ struct HomeView: View {
             } else {
                 VStack(spacing: 6) {
                     ForEach(upcoming) { session in
-                        Button {
-                            path.append(AppRoute.sessionDetail(session.id))
-                        } label: {
-                            HStack {
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(session.clientName)
-                                        .font(.izadi(.body))
-                                        .foregroundStyle(IzadiColor.ink)
-                                    Text("\(session.shortDate) · \(session.friendlyTime)")
-                                        .font(.izadi(.bodyMedium))
-                                        .foregroundStyle(IzadiColor.inkSoft)
-                                    if SessionQueries.isAwaitingWrapUp(session, now: now) {
-                                        Text("Awaiting wrap-up")
-                                            .font(.izadi(.label))
-                                            .foregroundStyle(IzadiColor.roseDeep)
-                                    }
-                                }
-                                Spacer()
-                                Image(systemName: "chevron.right")
-                                    .foregroundStyle(IzadiColor.sageSoft)
-                            }
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 10)
-                            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                            .background(
-                                SessionQueries.isAwaitingWrapUp(session, now: now)
-                                ? IzadiColor.butter
-                                : IzadiColor.foam.opacity(0.95)
-                            )
-                            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                        }
-                        .buttonStyle(.plain)
+                        upcomingSessionRow(session)
                     }
                 }
                 .padding(8)
@@ -192,6 +194,61 @@ struct HomeView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
             }
         }
+    }
+
+    private func upcomingSessionRow(_ session: Session) -> some View {
+        let awaitingWrapUp = SessionQueries.isAwaitingWrapUp(session, now: now)
+        let awaitingCourtesy = SessionQueries.isAwaitingCourtesySms(session, now: now)
+        let highlighted = awaitingWrapUp || awaitingCourtesy
+
+        return HStack(spacing: 10) {
+            Button {
+                path.append(AppRoute.sessionDetail(session.id))
+            } label: {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(session.clientName)
+                        .font(.izadi(.body))
+                        .foregroundStyle(IzadiColor.ink)
+                    Text("\(session.shortDate) · \(session.friendlyTime)")
+                        .font(.izadi(.bodyMedium))
+                        .foregroundStyle(IzadiColor.inkSoft)
+                    if awaitingWrapUp {
+                        Text("Awaiting wrap-up")
+                            .font(.izadi(.label))
+                            .foregroundStyle(IzadiColor.roseDeep)
+                    } else if awaitingCourtesy {
+                        Text("Courtesy SMS due")
+                            .font(.izadi(.label))
+                            .foregroundStyle(IzadiColor.roseDeep)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+            .buttonStyle(.plain)
+
+            if awaitingCourtesy {
+                Button {
+                    courtesySessionId = session.id
+                } label: {
+                    Image(systemName: "exclamationmark")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 36, height: 36)
+                        .background(IzadiColor.roseDeep)
+                        .clipShape(Circle())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Action courtesy SMS")
+            } else {
+                Image(systemName: "chevron.right")
+                    .foregroundStyle(IzadiColor.sageSoft)
+            }
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+        .background(highlighted ? IzadiColor.butter : IzadiColor.foam.opacity(0.95))
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
     }
 
     @ViewBuilder

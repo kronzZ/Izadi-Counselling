@@ -41,6 +41,9 @@
 		1CD15DD77C094D8F925DEDC8 /* SquarePointOfSaleSDK in Frameworks */ = {isa = PBXBuildFile; productRef = DA8C1567441F4755B430CEED /* SquarePointOfSaleSDK */; };
 		A1B2C3D4E5F60718293A4B5C /* AppLockService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */; };
 		C3D4E5F60718293A4B5C6D7E /* AppLockView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */; };
+		E4F5A60718293A4B5C6D7E8F /* CourtesySms.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5A60718293A4B5C6D7E8F90 /* CourtesySms.swift */; };
+		E5A60718293A4B5C6D7E8F91 /* CourtesyReminderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A60718293A4B5C6D7E8F92 /* CourtesyReminderService.swift */; };
+		E6A60718293A4B5C6D7E8F93 /* CourtesySmsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7A60718293A4B5C6D7E8F94 /* CourtesySmsSheet.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,6 +80,9 @@
 		E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SquarePaymentCoordinator.swift; sourceTree = "<group>"; };
 		B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockService.swift; sourceTree = "<group>"; };
 		D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLockView.swift; sourceTree = "<group>"; };
+		F5A60718293A4B5C6D7E8F90 /* CourtesySms.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtesySms.swift; sourceTree = "<group>"; };
+		F6A60718293A4B5C6D7E8F92 /* CourtesyReminderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtesyReminderService.swift; sourceTree = "<group>"; };
+		F7A60718293A4B5C6D7E8F94 /* CourtesySmsSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CourtesySmsSheet.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +136,7 @@
 				87656E37F92E40BFAC0787E9 /* Client.swift */,
 				E8358FE5A65842FDB5B00B0C /* DailyQuotes.swift */,
 				E246796D134248F392590EDD /* Session.swift */,
+				F5A60718293A4B5C6D7E8F90 /* CourtesySms.swift */,
 				B47B066850A04AEEA2C41018 /* WelcomeSms.swift */,
 			);
 			path = Models;
@@ -141,6 +148,7 @@
 				E74B2C2D365F4F6B8FAFE7E8 /* SquarePaymentCoordinator.swift */,
 				B2C3D4E5F60718293A4B5C6D /* AppLockService.swift */,
 				FA23A1B3D598480BBE9C56E3 /* AuthService.swift */,
+				F6A60718293A4B5C6D7E8F92 /* CourtesyReminderService.swift */,
 				E24EF5D45754471BB4ECF81C /* FirestoreRepository.swift */,
 				8154D32BBDC04A6E83E21DA5 /* PracticeStore.swift */,
 				F45755DE18DC49DF9473D480 /* SquareConfig.swift */,
@@ -161,6 +169,7 @@
 			children = (
 				D4E5F60718293A4B5C6D7E8F /* AppLockView.swift */,
 				15860CD5163B4619B301F7E6 /* AuthView.swift */,
+				F7A60718293A4B5C6D7E8F94 /* CourtesySmsSheet.swift */,
 				AF9DF8B6FEE54FF89419870E /* BookSessionView.swift */,
 				97F922B8A4384D6EAC45361A /* ClientDetailView.swift */,
 				C534AAA49EB646E39BE27647 /* ClientSessionsView.swift */,
@@ -281,10 +290,13 @@
 				C325C278B69448F4BC38AA0C /* Client.swift in Sources */,
 				601DA34E156F49FFA3F05F5F /* DailyQuotes.swift in Sources */,
 				816E51A9F5EB4759A128F33E /* Session.swift in Sources */,
+				E4F5A60718293A4B5C6D7E8F /* CourtesySms.swift in Sources */,
 				BFFC2F7C776F4F8899EACB59 /* WelcomeSms.swift in Sources */,
 				C8630B5D0C7F464C8E69162F /* AuthService.swift in Sources */,
+				E5A60718293A4B5C6D7E8F91 /* CourtesyReminderService.swift in Sources */,
 				42CAC870FA764299804A7F5F /* FirestoreRepository.swift in Sources */,
 				780F8337B9DF48F6B61F8970 /* PracticeStore.swift in Sources */,
+				E6A60718293A4B5C6D7E8F93 /* CourtesySmsSheet.swift in Sources */,
 				2A7BD341FB2F436FA9035EDB /* SquareConfig.swift in Sources */,
 				058A374C2AE844A384DBD0E1 /* IzadiTheme.swift in Sources */,
 				089A22211C89467588A08647 /* BookSessionView.swift in Sources */,

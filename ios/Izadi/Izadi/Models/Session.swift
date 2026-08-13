@@ -34,6 +34,8 @@ struct Session: Identifiable, Equatable, Hashable {
     var paymentStatus: PaymentStatus
     var paymentAmountCents: Int?
     var paymentMethod: PaymentMethod?
+    /// When true, courtesy SMS reminders are dismissed (whether or not an SMS was sent).
+    var courtesySmsCompleted: Bool
 
     init(
         id: String = UUID().uuidString,
@@ -46,7 +48,8 @@ struct Session: Identifiable, Equatable, Hashable {
         status: SessionStatus = .scheduled,
         paymentStatus: PaymentStatus = .pending,
         paymentAmountCents: Int? = nil,
-        paymentMethod: PaymentMethod? = nil
+        paymentMethod: PaymentMethod? = nil,
+        courtesySmsCompleted: Bool = false
     ) {
         self.id = id
         self.clientId = clientId
@@ -59,6 +62,7 @@ struct Session: Identifiable, Equatable, Hashable {
         self.paymentStatus = paymentStatus
         self.paymentAmountCents = paymentAmountCents
         self.paymentMethod = paymentMethod
+        self.courtesySmsCompleted = courtesySmsCompleted
     }
 
     var startsAt: Date {
@@ -124,6 +128,21 @@ enum SessionQueries {
 
     static func isAwaitingWrapUp(_ session: Session, now: Date = Date()) -> Bool {
         session.status == .scheduled && session.endsAt < now
+    }
+
+    /// Outstanding courtesy SMS while the session is still upcoming (wrap-up takes priority).
+    static func isAwaitingCourtesySms(_ session: Session, now: Date = Date()) -> Bool {
+        guard session.status == .scheduled else { return false }
+        guard !session.courtesySmsCompleted else { return false }
+        guard !isAwaitingWrapUp(session, now: now) else { return false }
+        guard session.startsAt > now else { return false }
+
+        let calendar = Calendar.current
+        let sessionDay = calendar.startOfDay(for: session.startsAt)
+        guard let reminderDay = calendar.date(byAdding: .day, value: -2, to: sessionDay) else {
+            return false
+        }
+        return calendar.startOfDay(for: now) >= reminderDay
     }
 
     static func isPast(_ session: Session) -> Bool {

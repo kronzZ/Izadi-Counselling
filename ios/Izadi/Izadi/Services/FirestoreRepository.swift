@@ -19,6 +19,7 @@ enum FirestorePaths {
 struct PracticeSettings: Equatable {
     var name: String
     var welcomeSmsTemplate: String
+    var courtesySmsTemplate: String
     var currency: String
     var estimatedFeeDollars: Int
     var defaultFeeCents: Int
@@ -26,6 +27,7 @@ struct PracticeSettings: Equatable {
     static let `default` = PracticeSettings(
         name: "Izadi Counselling",
         welcomeSmsTemplate: WelcomeSms.defaultTemplate,
+        courtesySmsTemplate: CourtesySms.defaultTemplate,
         currency: "AUD",
         estimatedFeeDollars: 130,
         defaultFeeCents: 15_000
@@ -127,7 +129,8 @@ enum FirestoreMapping {
             status: status,
             paymentStatus: paymentStatus,
             paymentAmountCents: amount,
-            paymentMethod: method
+            paymentMethod: method,
+            courtesySmsCompleted: data["courtesySmsCompleted"] as? Bool ?? false
         )
     }
 
@@ -145,6 +148,7 @@ enum FirestoreMapping {
             "paymentStatus": session.paymentStatus.rawValue,
             "paymentAmountCents": session.paymentAmountCents as Any,
             "paymentMethod": session.paymentMethod?.rawValue as Any,
+            "courtesySmsCompleted": session.courtesySmsCompleted,
             "updatedAt": FieldValue.serverTimestamp(),
         ]
     }
@@ -154,6 +158,7 @@ enum FirestoreMapping {
         return PracticeSettings(
             name: data["name"] as? String ?? PracticeSettings.default.name,
             welcomeSmsTemplate: data["welcomeSmsTemplate"] as? String ?? WelcomeSms.defaultTemplate,
+            courtesySmsTemplate: data["courtesySmsTemplate"] as? String ?? CourtesySms.defaultTemplate,
             currency: data["currency"] as? String ?? "AUD",
             estimatedFeeDollars: data["estimatedFeeDollars"] as? Int ?? 130,
             defaultFeeCents: data["defaultFeeCents"] as? Int ?? 15_000
@@ -164,6 +169,7 @@ enum FirestoreMapping {
         [
             "name": settings.name,
             "welcomeSmsTemplate": settings.welcomeSmsTemplate,
+            "courtesySmsTemplate": settings.courtesySmsTemplate,
             "currency": settings.currency,
             "estimatedFeeDollars": settings.estimatedFeeDollars,
             "defaultFeeCents": settings.defaultFeeCents,
@@ -274,6 +280,18 @@ final class FirestoreRepository {
         try await FirestorePaths.practice(uid).setData(
             [
                 "welcomeSmsTemplate": value,
+                "updatedAt": FieldValue.serverTimestamp(),
+            ],
+            merge: true
+        )
+    }
+
+    func updateCourtesySmsTemplate(uid: String, template: String) async throws {
+        let saved = template.trimmingCharacters(in: .whitespacesAndNewlines)
+        let value = saved.isEmpty ? CourtesySms.defaultTemplate : saved
+        try await FirestorePaths.practice(uid).setData(
+            [
+                "courtesySmsTemplate": value,
                 "updatedAt": FieldValue.serverTimestamp(),
             ],
             merge: true
