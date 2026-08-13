@@ -46,7 +46,7 @@ final class CourtesyReminderService: NSObject, ObservableObject {
             center.removePendingNotificationRequests(withIdentifiers: ours)
         }
 
-        var requests: [UNNotificationRequest] = []
+        var timedRequests: [(fireDate: Date, request: UNNotificationRequest)] = []
         for session in sessions {
             for fireDate in CourtesySmsSchedule.fireTimes(for: session) {
                 let identifier = notificationIdentifier(sessionId: session.id, fireDate: fireDate)
@@ -61,17 +61,21 @@ final class CourtesyReminderService: NSObject, ObservableObject {
                     from: fireDate
                 )
                 let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
-                requests.append(UNNotificationRequest(identifier: identifier, content: content, trigger: trigger))
+                let request = UNNotificationRequest(
+                    identifier: identifier,
+                    content: content,
+                    trigger: trigger
+                )
+                timedRequests.append((fireDate, request))
             }
         }
 
         // Leave headroom under iOS's ~64 pending-notification limit.
-        for request in requests.sorted(by: { lhs, rhs in
-            let left = (lhs.trigger as? UNCalendarNotificationTrigger)?.nextTriggerDate() ?? .distantFuture
-            let right = (rhs.trigger as? UNCalendarNotificationTrigger)?.nextTriggerDate() ?? .distantFuture
-            return left < right
-        }.prefix(60)) {
-            try? await center.add(request)
+        let limited = timedRequests
+            .sorted { $0.fireDate < $1.fireDate }
+            .prefix(60)
+        for item in limited {
+            try? await center.add(item.request)
         }
     }
 
