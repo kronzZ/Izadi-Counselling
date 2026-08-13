@@ -8,12 +8,15 @@ struct SessionDetailView: View {
     @Binding var path: NavigationPath
 
     @State private var draft: Session
+    @State private var isEditing = false
+    @State private var editBaseline: Session?
     @State private var showCompleteSheet = false
     @State private var paymentDollars = "150"
     @State private var completeError: String?
     /// Kept across the Square app switch so we still know the amount on return.
     @State private var pendingTapAmountCents: Int?
     @State private var showDeletePaymentConfirm = false
+    @State private var showDiscardConfirm = false
 
     init(session: Session, path: Binding<NavigationPath>) {
         self.session = session
@@ -21,11 +24,39 @@ struct SessionDetailView: View {
         self._draft = State(initialValue: session)
     }
 
+    private var hasUnsavedScheduleChanges: Bool {
+        guard isEditing, let editBaseline else { return false }
+        return draft.date != editBaseline.date || draft.timeMinutes != editBaseline.timeMinutes
+    }
+
+    private var rollingDates: [Date] {
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: Date())
+        var dates = (0..<61).compactMap { calendar.date(byAdding: .day, value: $0, to: start) }
+        let sessionDay = calendar.startOfDay(for: draft.date)
+        if !dates.contains(where: { calendar.isDate($0, inSameDayAs: sessionDay) }) {
+            dates.append(sessionDay)
+            dates.sort()
+        }
+        return dates
+    }
+
     var body: some View {
         SoftScreenBackground {
             VStack(alignment: .leading, spacing: 0) {
-                BackButton { path.removeLast() }
-                    .padding(.horizontal, 16)
+                HStack {
+                    BackButton { attemptLeave() }
+                    Spacer()
+                    if draft.status == .scheduled && !isEditing {
+                        Button("Edit") {
+                            startEditing()
+                        }
+                        .font(.izadi(.bodyMedium))
+                        .foregroundStyle(IzadiColor.sage)
+                        .padding(.trailing, 20)
+                    }
+                }
+                .padding(.horizontal, 16)
 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 16) {
@@ -37,12 +68,16 @@ struct SessionDetailView: View {
                             .tracking(2.2)
                             .foregroundStyle(IzadiColor.sageSoft)
 
-                        Text(draft.friendlyDate)
-                            .font(.izadi(.body))
-                            .foregroundStyle(IzadiColor.ink)
-                        Text("\(draft.friendlyTime) · \(draft.durationMinutes) minutes")
-                            .font(.izadi(.bodyMedium))
-                            .foregroundStyle(IzadiColor.inkSoft)
+                        if isEditing {
+                            scheduleEditor
+                        } else {
+                            Text(draft.friendlyDate)
+                                .font(.izadi(.body))
+                                .foregroundStyle(IzadiColor.ink)
+                            Text("\(draft.friendlyTime) · \(draft.durationMinutes) minutes")
+                                .font(.izadi(.bodyMedium))
+                                .foregroundStyle(IzadiColor.inkSoft)
+                        }
 
                         if let paid = draft.formattedPaidSummary {
                             Text(paid)
@@ -50,9 +85,23 @@ struct SessionDetailView: View {
                                 .foregroundStyle(IzadiColor.sage)
                         }
 
-                        notesField
+                        if !isEditing {
+                            notesField
+                        }
 
-                        if draft.status == .scheduled {
+                        if isEditing {
+                            PrimaryButton(title: "Save changes", enabled: hasUnsavedScheduleChanges) {
+                                saveScheduleEdits()
+                            }
+
+                            Button("Cancel") {
+                                discardEdits()
+                            }
+                            .font(.izadi(.bodyMedium))
+                            .foregroundStyle(IzadiColor.sage)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 8)
+                        } else if draft.status == .scheduled {
                             PrimaryButton(title: "Mark complete") {
                                 completeError = nil
                                 showCompleteSheet = true
@@ -87,7 +136,7 @@ struct SessionDetailView: View {
                             }
                         }
 
-                        if draft.paymentStatus == .paid {
+                        if !isEditing, draft.paymentStatus == .paid {
                             Button {
                                 showDeletePaymentConfirm = true
                             } label: {
@@ -115,20 +164,21 @@ struct SessionDetailView: View {
             .padding(.top, 8)
         }
         .toolbar(.hidden, for: .navigationBar)
+        .background(InteractivePopDisabled(disabled: hasUnsavedScheduleChanges))
         .sheet(isPresented: $showCompleteSheet) {
             completeSheet
                 .presentationDetents([.medium])
         }
-        .alert("Delete this payment?", isPresented: $showDeletePaymentConfirm) {
-            Button("Delete", role: .destructive) {
-                store.deleteSession(sessionId: draft.id)
-                path.removeLast()
+        .alert("Discard schedule changes?", isPresented: $showDiscardConfirm) {
+            Button("Discard", role: .destructive) {
+                discardEditsAndLeave()
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Keep editing", role: .cancel) {}
         } message: {
-            Text("All data for this payment record will be lost, including the session details. This can’t be undone.")
+            Text("Your date and time changes won’t be saved.")
         }
         .onChange(of: store.sessions) { _, sessions in
+            guard !isEditing else { return }
             if let latest = sessions.first(where: { $0.id == draft.id }) {
                 draft = latest
             }
@@ -151,6 +201,85 @@ struct SessionDetailView: View {
             pendingTapAmountCents = nil
             squarePayments.clearError()
         }
+    }
+
+    private var scheduleEditor: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("DATE")
+                .font(.izadi(.label))
+                .tracking(2.2)
+                .foregroundStyle(IzadiColor.sageSoft)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(rollingDates, id: \.self) { date in
+                        let selected = Calendar.current.isDate(date, inSameDayAs: draft.date)
+                        Button {
+                            draft.date = Calendar.current.startOfDay(for: date)
+                        } label: {
+                            VStack(spacing: 4) {
+                                Text(date.formatted(.dateTime.weekday(.abbreviated)))
+                                    .font(.izadi(.label))
+                                Text("\(Calendar.current.component(.day, from: date))")
+                                    .font(.izadi(.titleMedium))
+                            }
+                            .foregroundStyle(selected ? .white : IzadiColor.ink)
+                            .frame(width: 64, height: 72)
+                            .background(selected ? IzadiColor.sage : IzadiColor.foam)
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+
+            Text("TIME")
+                .font(.izadi(.label))
+                .tracking(2.2)
+                .foregroundStyle(IzadiColor.sageSoft)
+
+            HStack(spacing: 16) {
+                timeStepper(title: "−") { adjustTime(-5) }
+                Text(timeLabel)
+                    .font(.izadi(.titleMedium))
+                    .foregroundStyle(IzadiColor.ink)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(IzadiColor.foam)
+                    .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                timeStepper(title: "+") { adjustTime(5) }
+            }
+
+            Text("Duration stays \(draft.durationMinutes) minutes.")
+                .font(.izadi(.bodyMedium))
+                .foregroundStyle(IzadiColor.inkSoft)
+        }
+    }
+
+    private var timeLabel: String {
+        let hour = draft.timeMinutes / 60
+        let minute = draft.timeMinutes % 60
+        var components = DateComponents()
+        components.hour = hour
+        components.minute = minute
+        let date = Calendar.current.date(from: components) ?? Date()
+        return date.formatted(.dateTime.hour().minute())
+    }
+
+    private func adjustTime(_ delta: Int) {
+        draft.timeMinutes = min(max(draft.timeMinutes + delta, 0), (23 * 60) + 55)
+    }
+
+    private func timeStepper(title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.izadi(.title))
+                .foregroundStyle(IzadiColor.sage)
+                .frame(width: 52, height: 52)
+                .background(IzadiColor.foam)
+                .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+        .buttonStyle(.plain)
     }
 
     private var notesField: some View {
@@ -218,6 +347,51 @@ struct SessionDetailView: View {
             }
             .padding(24)
         }
+    }
+
+    private func startEditing() {
+        editBaseline = draft
+        isEditing = true
+    }
+
+    private func discardEdits() {
+        if let editBaseline {
+            draft = editBaseline
+        }
+        isEditing = false
+        editBaseline = nil
+    }
+
+    private func discardEditsAndLeave() {
+        discardEdits()
+        path.removeLast()
+    }
+
+    private func attemptLeave() {
+        if hasUnsavedScheduleChanges {
+            showDiscardConfirm = true
+        } else if isEditing {
+            discardEdits()
+            path.removeLast()
+        } else {
+            path.removeLast()
+        }
+    }
+
+    private func saveScheduleEdits() {
+        guard let editBaseline else { return }
+        let scheduleChanged =
+            draft.date != editBaseline.date || draft.timeMinutes != editBaseline.timeMinutes
+
+        var updated = draft
+        if scheduleChanged {
+            // Reschedule courtesy reminders against the new slot.
+            updated.courtesySmsCompleted = false
+        }
+        draft = updated
+        store.updateSession(updated)
+        isEditing = false
+        self.editBaseline = nil
     }
 
     private func completeCash() {
